@@ -13,7 +13,9 @@ plantas do usuario
 	{ tipos de plantas do usuario
 	  dados das plantas
 	}
-	  
-tutorial
-	{ interconexao de arduino
+Opcional
+	{ 
+interconexao de arduino
+tutorial em video
+teste de ph (vende o do arduino separado ou explica um caseiro ou vende o de uso unico)
 	}
