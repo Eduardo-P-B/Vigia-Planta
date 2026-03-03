@@ -2,12 +2,12 @@ Vigia Planta
 
 Higor
 Eduardo
-Davi
-Davi
+Davi Puzoni
+Davi Caldeira
 
-introdução
+O dispositivo que vamos desenvolver tem como finalidade ser uma placa de arduino R3 conectada a sensores de temperatura(TMP36), umidade do solo e uma placa solar para mais alto suficiencia e com fito de mensurar a luz necessaria para o cultivo da muda. Todo esse circuito com um revestimento feito por impressoras 3D com fios de impressão vindo de materiais reciclados.
 
-Nosso projeto busca oferecer comodidade e simplificar o cuidado de plantas em residências dando informações importantes e de maneira rapida, assim facilitando seu cuidado continuo
+Nosso projeto busca oferecer comodidade e simplificar o cuidado de plantas em residências dando informações importantes e de maneira rapida, assim facilitando seu cuidado continuo.
 
 e) WBS
 f) Gantt
