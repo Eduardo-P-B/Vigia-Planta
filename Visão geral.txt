@@ -11,7 +11,7 @@ Nosso projeto busca oferecer comodidade e simplificar o cuidado de plantas em re
 
 e) WBS ✓
 
-f) Gantt
+f) Gantt ✓
 
 g)analise de custos
 
