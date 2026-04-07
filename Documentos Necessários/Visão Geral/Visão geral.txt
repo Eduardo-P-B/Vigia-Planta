@@ -13,6 +13,6 @@ e) WBS ✓
 
 f) Gantt ✓
 
-g)analise de custos
+g)analise de custos: O custo inicial será de cerca de R$ 20 000, já para continua expansão com 4 full stacks (os integrantes do grupo), cada um com salario de 2 salarios minimos antes dos impostos, e mais cerca de 1 salario minimo para aluguel de servidor simples.
 
 h)analise de riscos
