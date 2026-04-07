@@ -13,6 +13,29 @@ e) WBS ✓
 
 f) Gantt ✓
 
-g)analise de custos: O custo inicial será de cerca de R$ 20 000, já para continua expansão com 4 full stacks (os integrantes do grupo), cada um com salario de 2 salarios minimos antes dos impostos, e mais cerca de 1 salario minimo para aluguel de servidor simples.
+g)analise de custos:
+O custo inicial será de cerca de R$ 20 000, já para continua expansão com 4 full stacks (os integrantes do grupo), cada um com salario de 2 salarios minimos antes dos impostos, e mais cerca de 1 salario minimo para aluguel de servidor simples.
 
-h)analise de riscos
+Para o cliente será necessária a compra do "Vigia" (a preço de custo), porém o uso do aplicativo além do primeiro mês sera pago ou com anuncios.
+
+h)analise de riscos: Analise feita usando o metodo Forças, Oportunidades, Fraquesas e Ameaças (FOFA).
+Forças:
+Tecnologia própria (produto unico),
+Apoio da unicamp,
+Metodologia ágil já implementada.
+
+Oportunidades:
+Nova tecnologia no mercado (produto unico),
+Poucos concorrentes oferecem um sistema tão específico,
+Possibilidade de vender o software para outras empressas mais experientes.
+
+Fraquesas:
+Equipe sem exeriencia.
+
+Ameaças:
+Risco de baixa adoção inicial por falta de orçamento de marketing 
+(Aceitar: Lançar a versão Produto Minimo Viavel, aceitar que poucos clientes usarão no início e focar em coletar feedback para melhorar o produto),
+Risco de perda de mercado para um concorrente grande
+(Mitigar: Tentar vender os direitos para a empressa, assim evitando perdas futuras),
+Risco de falha crítica no servidor de hospedagem
+(Transferir: Contratar um plano de hospedagem com SLA (Acordo de Nível de Serviço) que garanta 99.9% de uptime e backups automáticos).
