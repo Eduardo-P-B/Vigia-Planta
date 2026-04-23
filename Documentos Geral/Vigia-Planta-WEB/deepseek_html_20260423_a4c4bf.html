@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GreenManager - Home</title>
+    <link rel="stylesheet" href="home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Barra superior -->
+    <header class="appbar">
+        <div class="appbar-content">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo-area">
+                <i class="fas fa-leaf"></i>
+                <span>GreenManager</span>
+            </div>
+            <div class="user-area">
+                <i class="fas fa-bell notification-icon"></i>
+                <div class="user-avatar">
+                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário" alt="User">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Saudação -->
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <h1>Olá, João! 👋</h1>
+                <p>Suas plantas estão felizes hoje</p>
+            </div>
+            <div class="date-badge">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Abril, 2026</span>
+            </div>
+        </div>
+
+        <!-- Estatísticas rápidas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon plants-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>12</h3>
+                    <p>Plantas</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon water-icon">
+                    <i class="fas fa-tint"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>3</h3>
+                    <p>Precisam de água</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon sun-icon">
+                    <i class="fas fa-sun"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>8h</h3>
+                    <p>Luz hoje</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dica do dia -->
+        <div class="tip-card">
+            <i class="fas fa-lightbulb"></i>
+            <div class="tip-content">
+                <h4>💡 Dica do dia</h4>
+                <p>Regue suas plantas pela manhã para evitar a evaporação rápida da água.</p>
+            </div>
+        </div>
+
+        <!-- Seção de plantas -->
+        <div class="plants-header">
+            <h2>🌱 Minhas Plantas</h2>
+            <button class="add-plant-btn">
+                <i class="fas fa-plus"></i>
+                Adicionar
+            </button>
+        </div>
+
+        <div class="plants-grid">
+            <!-- Planta 1 - Monstera -->
+            <div class="plant-card">
+                <div class="plant-image">
+                    <img src="https://images.unsplash.com/photo-1614594971028-2b0b2b6c5b75?w=200&h=200&fit=crop" alt="Monstera">
+                    <div class="plant-status online"></div>
+                </div>
+                <div class="plant-info">
+                    <h3>Monstera Deliciosa</h3>
+                    <p>Sala de Estar</p>
+                    <div class="plant-stats">
+                        <div class="plant-water">
+                            <i class="fas fa-tint"></i>
+                            <span>70%</span>
+                        </div>
+                        <div class="plant-light">
+                            <i class="fas fa-sun"></i>
+                            <span>Média</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 70%"></div>
+                    </div>
+                    <div class="next-care">
+                        <i class="fas fa-calendar-week"></i>
+                        <span>Próxima rega: amanhã</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planta 2 - Suculenta -->
+            <div class="plant-card">
+                <div class="plant-image">
+                    <img src="https://images.unsplash.com/photo-1459156212016-c812468e2115?w=200&h=200&fit=crop" alt="Suculenta">
+                    <div class="plant-status warning"></div>
+                </div>
+                <div class="plant-info">
+                    <h3>Suculenta Echeveria</h3>
+                    <p>Quarto</p>
+                    <div class="plant-stats">
+                        <div class="plant-water">
+                            <i class="fas fa-tint"></i>
+                            <span>25%</span>
+                        </div>
+                        <div class="plant-light">
+                            <i class="fas fa-sun"></i>
+                            <span>Alta</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress urgent" style="width: 25%"></div>
+                    </div>
+                    <div class="next-care urgent-text">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Regar hoje!</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planta 3 - Samambaia -->
+            <div class="plant-card">
+                <div class="plant-image">
+                    <img src="https://images.unsplash.com/photo-1595959183082-7b570b7e4b50?w=200&h=200&fit=crop" alt="Samambaia">
+                    <div class="plant-status online"></div>
+                </div>
+                <div class="plant-info">
+                    <h3>Samambaia Americana</h3>
+                    <p>Varanda</p>
+                    <div class="plant-stats">
+                        <div class="plant-water">
+                            <i class="fas fa-tint"></i>
+                            <span>60%</span>
+                        </div>
+                        <div class="plant-light">
+                            <i class="fas fa-sun"></i>
+                            <span>Baixa</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 60%"></div>
+                    </div>
+                    <div class="next-care">
+                        <i class="fas fa-calendar-week"></i>
+                        <span>Próxima rega: 2 dias</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planta 4 - Cacto -->
+            <div class="plant-card">
+                <div class="plant-image">
+                    <img src="https://images.unsplash.com/photo-1487730116645-74489c95b41b?w=200&h=200&fit=crop" alt="Cacto">
+                    <div class="plant-status online"></div>
+                </div>
+                <div class="plant-info">
+                    <h3>Cacto Mandacaru</h3>
+                    <p>Sala de Estar</p>
+                    <div class="plant-stats">
+                        <div class="plant-water">
+                            <i class="fas fa-tint"></i>
+                            <span>45%</span>
+                        </div>
+                        <div class="plant-light">
+                            <i class="fas fa-sun"></i>
+                            <span>Média</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 45%"></div>
+                    </div>
+                    <div class="next-care">
+                        <i class="fas fa-calendar-week"></i>
+                        <span>Próxima rega: 5 dias</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de recomendações -->
+        <div class="recommendations-section">
+            <h2>🌟 Recomendações para hoje</h2>
+            <div class="recommendations-list">
+                <div class="recommendation-item">
+                    <div class="rec-icon">
+                        <i class="fas fa-hand-sparkles"></i>
+                    </div>
+                    <div class="rec-info">
+                        <h4>Limpar as folhas</h4>
+                        <p>Suas plantas vão respirar melhor</p>
+                    </div>
+                    <button class="rec-btn">Fazer</button>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-icon">
+                        <i class="fas fa-flask"></i>
+                    </div>
+                    <div class="rec-info">
+                        <h4>Fertilizar a Monstera</h4>
+                        <p>Ela está em fase de crescimento</p>
+                    </div>
+                    <button class="rec-btn">Fazer</button>
+                </div>
+                <div class="recommendation-item">
+                    <div class="rec-icon">
+                        <i class="fas fa-arrows-alt"></i>
+                    </div>
+                    <div class="rec-info">
+                        <h4>Rotacionar o Cacto</h4>
+                        <p>Para crescer uniformemente</p>
+                    </div>
+                    <button class="rec-btn">Fazer</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Barra de navegação inferior -->
+    <nav class="bottom-nav">
+        <div class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Início</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Estatísticas</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-brain"></i>
+            <span>IA Advisor</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Perfil</span>
+        </div>
+    </nav>
+</body>
+</html>

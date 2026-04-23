@@ -1,0 +1,23 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: rgba(226, 235, 215, 0.95);
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.appbar {
+    width: 100%;
+    height: 130px;
+    background-color: #1B5E20;
+    border-radius: 0 0 30px 30px;
+}

@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Vigia Planta</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style-login.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="Fvaicom.png" type="image/png">
+    <link rel="icon" href="Favicom.png" type="image/png">
 </head>
 <body>
     <div class="container">
@@ -18,6 +18,7 @@
                 </div>
                 <h1 class="logo-text">Vigia Planta</h1>
                 <p class="tagline">Suas plantas na palma da mão</p>
+                <p class="default-text">Cadastrar-se</p>
             </div>
 
             <form class="login-form">
@@ -42,13 +43,25 @@
                     </div>
                 </div>
 
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-lock"></i>
+                        Confirmar Senha
+                    </label>
+                    <div class="password-wrapper">
+                        <input type="password" class="input-field" placeholder="Digite sua senha novamente">
+                        <button type="button" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="form-options">
                     <label class="checkbox-label">
                         <input type="checkbox">
                         <span class="checkbox-custom"></span>
                         Lembrar-me
                     </label>
-                    <a href="#" class="forgot-password">Esqueceu a senha?</a>
                 </div>
 
                 <button type="submit" class="login-btn">
@@ -58,7 +71,7 @@
             </form>
 
             <div class="signup-prompt">
-                <p>Não tem uma conta? <a href="#">Criar conta</a></p>
+                <p>Já tem uma conta? <a href="Login.html">Entrar</a></p>
             </div>
 
             <div class="plant-decoration">
