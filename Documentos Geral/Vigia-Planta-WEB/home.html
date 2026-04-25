@@ -75,87 +75,55 @@
             <div class="hero-card">
                 <div class="hero-content">
                     <h1>Olá, Usuário! 🌿</h1>
-                    <button class="hero-btn">
-                        <i class="fas fa-play"></i>
-                        Ver resumo da semana
-                    </button>
                 </div>
-                <div class="hero-decoration">
-                    <div class="floating-plant"></div>
-                </div>
-            </div>
-
-            <!-- Métricas Principais -->
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-icon green-bg">
-                        <i class="fas fa-leaf"></i>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon green-bg">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>24</h3>
+                            <p>Plantas no total</p>
+                            <span class="trend up">+4 este mês</span>
+                        </div>
                     </div>
-                    <div class="metric-info">
-                        <h3>24</h3>
-                        <p>Plantas no total</p>
-                        <span class="trend up">+4 este mês</span>
+                    <div class="metric-card">
+                        <div class="metric-icon blue-bg">
+                            <i class="fas fa-tint"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>8</h3>
+                            <p>Precisam de água</p>
+                            <span class="trend warning">urgente</span>
+                        </div>
                     </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon blue-bg">
-                        <i class="fas fa-tint"></i>
+                    <div class="metric-card">
+                        <div class="metric-icon orange-bg">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>92%</h3>
+                            <p>Saúde média</p>
+                            <span class="trend up">excelente</span>
+                        </div>
                     </div>
-                    <div class="metric-info">
-                        <h3>8</h3>
-                        <p>Precisam de água</p>
-                        <span class="trend warning">urgente</span>
+                    <div class="metric-card">
+                        <div class="metric-icon purple-bg">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3>15</h3>
+                            <p>Tarefas hoje</p>
+                            <span class="trend">pendentes</span>
+                        </div>
                     </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon orange-bg">
-                        <i class="fas fa-sun"></i>
-                    </div>
-                    <div class="metric-info">
-                        <h3>92%</h3>
-                        <p>Saúde média</p>
-                        <span class="trend up">excelente</span>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon purple-bg">
-                        <i class="fas fa-calendar-week"></i>
-                    </div>
-                    <div class="metric-info">
-                        <h3>15</h3>
-                        <p>Tarefas hoje</p>
-                        <span class="trend">pendentes</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Seção de Ação Rápida -->
-            <div class="quick-actions">
-                <h2>Ações Rápidas</h2>
-                <div class="actions-grid">
-                    <button class="action-btn">
-                        <i class="fas fa-plus-circle"></i>
-                        <span>Nova Planta</span>
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-water"></i>
-                        <span>Regar Todas</span>
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Relatório</span>
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-camera"></i>
-                        <span>Identificar</span>
-                    </button>
                 </div>
             </div>
 
             <!-- Plantas em Destaque -->
             <div class="plants-section">
                 <div class="section-header">
-                    <h2>🌱 Plantas para cuidar hoje</h2>
+                    <h2>🌱 Plantas que precisam de atenção</h2>
                     <a href="#" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="plants-carousel">
@@ -163,147 +131,51 @@
                         <div class="plant-preview">
                             <img src="https://images.unsplash.com/photo-1614594971028-2b0b2b6c5b75?w=150&h=150&fit=crop" alt="Monstera">
                             <div class="plant-overlay">
-                                <span class="emergency-icon">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                </span>
                             </div>
                         </div>
                         <h4>Monstera</h4>
-                        <p>Regar agora!</p>
+                        <p>Nível de Umidade:</p>
                         <div class="water-progress">
                             <div class="progress-bar" style="width: 20%"></div>
                         </div>
-                        <button class="care-btn">Cuidar</button>
                     </div>
                     <div class="plant-item warning">
                         <div class="plant-preview">
                             <img src="https://images.unsplash.com/photo-1459156212016-c812468e2115?w=150&h=150&fit=crop" alt="Suculenta">
                         </div>
                         <h4>Suculenta</h4>
-                        <p>Fertilizar hoje</p>
+                        <p>Nível de Umidade:</p>
                         <div class="water-progress">
                             <div class="progress-bar" style="width: 45%"></div>
                         </div>
-                        <button class="care-btn">Cuidar</button>
                     </div>
                     <div class="plant-item">
                         <div class="plant-preview">
                             <img src="https://images.unsplash.com/photo-1595959183082-7b570b7e4b50?w=150&h=150&fit=crop" alt="Samambaia">
                         </div>
                         <h4>Samambaia</h4>
-                        <p>Umidade baixa</p>
+                        <p>Nível de Umidade:</p>
                         <div class="water-progress">
                             <div class="progress-bar" style="width: 60%"></div>
                         </div>
-                        <button class="care-btn">Cuidar</button>
                     </div>
                     <div class="plant-item">
                         <div class="plant-preview">
                             <img src="https://images.unsplash.com/photo-1487730116645-74489c95b41b?w=150&h=150&fit=crop" alt="Cacto">
                         </div>
                         <h4>Cacto</h4>
-                        <p>Ótima saúde</p>
+                        <p>Nível de Umidade:</p>
                         <div class="water-progress">
                             <div class="progress-bar" style="width: 85%"></div>
                         </div>
-                        <button class="care-btn">Cuidar</button>
                     </div>
                 </div>
             </div>
 
             <!-- Insights e Recomendações -->
-            <div class="insights-grid">
-                <div class="insight-card">
-                    <div class="insight-header">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>Insights da Semana</h3>
-                    </div>
-                    <div class="insight-stats">
-                        <div class="stat-item">
-                            <span class="stat-label">Tempo médio de cuidado</span>
-                            <span class="stat-value">15 min/dia</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Plantas mais saudáveis</span>
-                            <span class="stat-value">Cacto, Jade, Aloe</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-label">Meta da semana</span>
-                            <span class="stat-value">8/10 tarefas</span>
-                        </div>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress-label">
-                            <span>Progresso mensal</span>
-                            <span>74%</span>
-                        </div>
-                        <div class="global-progress">
-                            <div class="global-progress-bar" style="width: 74%"></div>
-                        </div>
-                    </div>
-                </div>
+            
 
-                <div class="recommendation-card">
-                    <div class="recommendation-header">
-                        <i class="fas fa-lightbulb"></i>
-                        <h3>Recomendações IA</h3>
-                    </div>
-                    <div class="recommendation-list">
-                        <div class="rec-item">
-                            <div class="rec-dot green"></div>
-                            <div class="rec-text">
-                                <p><strong>Monstera</strong> pode precisar de um vaso maior</p>
-                                <small>Baseado no crescimento recente</small>
-                            </div>
-                        </div>
-                        <div class="rec-item">
-                            <div class="rec-dot orange"></div>
-                            <div class="rec-text">
-                                <p><strong>Suculenta</strong> está recebendo luz excessiva</p>
-                                <small>Mova para sombra parcial</small>
-                            </div>
-                        </div>
-                        <div class="rec-item">
-                            <div class="rec-dot blue"></div>
-                            <div class="rec-text">
-                                <p><strong>Samambaia</strong> aumente a umidade ambiente</p>
-                                <small>Borrifar água 2x ao dia</small>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="ai-chat-btn">
-                        <i class="fas fa-comment-dots"></i>
-                        Falar com Assistente IA
-                    </button>
-                </div>
-            </div>
 
-            <!-- Galeria de Dicas -->
-            <div class="tips-gallery">
-                <div class="section-header">
-                    <h2>💡 Dicas e Curiosidades</h2>
-                    <a href="#" class="view-all">Ver mais <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <div class="tips-grid">
-                    <div class="tip-card-mini">
-                        <i class="fas fa-droplet"></i>
-                        <h4>Água da chuva</h4>
-                        <p>Plantas preferem água da chuva por conter menos cloro</p>
-                    </div>
-                    <div class="tip-card-mini">
-                        <i class="fas fa-moon"></i>
-                        <h4>Luz indireta</h4>
-                        <p>A maioria das plantas de interior prefere luz indireta</p>
-                    </div>
-                    <div class="tip-card-mini">
-                        <i class="fas fa-temperature-low"></i>
-                        <h4>Temperatura ideal</h4>
-                        <p>Entre 18°C e 24°C é perfeito para plantas tropicais</p>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
 
     <script>
         // Menu toggle para mobile
