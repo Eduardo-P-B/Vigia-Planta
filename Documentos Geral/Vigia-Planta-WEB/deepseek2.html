@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Vigia Planta</title>
-    <link rel="stylesheet" href="style-home.css">
+    <title>GreenManager - Home</title>
+    <link rel="stylesheet" href="home1.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -14,8 +14,8 @@
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="Favicom.png" height="30px">
-            <h3>Vigia Planta</h3>
+            <i class="fas fa-leaf"></i>
+            <h3>GreenManager</h3>
         </div>
         <nav class="sidebar-nav">
             <a href="#" class="sidebar-link active">
@@ -31,19 +31,24 @@
                 <span>Estatísticas</span>
             </a>
             <a href="#" class="sidebar-link">
-                <i class="fa-regular fa-credit-card"></i>
-                <span>Assinatura</span>
+                <i class="fas fa-robot"></i>
+                <span>Assistente IA</span>
             </a>
             <a href="#" class="sidebar-link">
                 <i class="fas fa-calendar-alt"></i>
                 <span>Calendário</span>
             </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-cog"></i>
+                <span>Configurações</span>
+            </a>
         </nav>
         <div class="sidebar-footer">
             <div class="user-info-sidebar">
-                <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
+                <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=João+S&bold=true" alt="Avatar">
                 <div>
-                    <p>Usuário</p>
+                    <p>João Silva</p>
+                    <span>Plano Premium</span>
                 </div>
             </div>
         </div>
@@ -58,14 +63,17 @@
             <button class="menu-toggle" id="menuToggle">
                 <i class="fas fa-bars"></i>
             </button>
-
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar plantas, dicas...">
+            </div>
             <div class="top-actions">
                 <button class="notifications-btn">
                     <i class="fas fa-bell"></i>
                     <span class="badge">3</span>
                 </button>
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário+S&bold=true&length=2" alt="Perfil">
+                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=João+S&bold=true&length=2" alt="Perfil">
                 </div>
             </div>
         </header>
@@ -74,7 +82,8 @@
             <!-- Hero Section -->
             <div class="hero-card">
                 <div class="hero-content">
-                    <h1>Olá, Usuário! 🌿</h1>
+                    <h1>Olá, João! 🌿</h1>
+                    <p>Suas plantas estão prosperando. Hoje é um ótimo dia para cuidar delas!</p>
                     <button class="hero-btn">
                         <i class="fas fa-play"></i>
                         Ver resumo da semana
