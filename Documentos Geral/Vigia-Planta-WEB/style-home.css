@@ -336,16 +336,6 @@ body {
     margin: 5px 0;
 }
 
-.trend {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.trend.up { color: #4CAF50; }
-.trend.warning { color: #FF9800; }
-
-
 /* Plants Section */
 .plants-section {
     margin-bottom: 40px;
