@@ -250,6 +250,11 @@ body {
     overflow: hidden;
 }
 
+.hero-card-header {
+    display: flex;
+    flex-direction: row;
+}
+
 .hero-content h1 {
     font-size: 36px;
     margin-bottom: 50px;
@@ -316,6 +321,40 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 28px;
+    color: white;
+}
+
+.action-btn {
+    background: white;
+    border: none;
+    padding: 18px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    justify-content: space-between;
+    margin-left: auto;
+    
+}
+
+.action-btn i {
+    font-size: 28px;
+    color: #4CAF50;
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+    background: #4CAF50;
+    color: white;
+}
+
+.action-btn:hover i {
     color: white;
 }
 

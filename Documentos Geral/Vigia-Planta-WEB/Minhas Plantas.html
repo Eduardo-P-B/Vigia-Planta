@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Vigia Planta</title>
+    <link rel="stylesheet" href="style-home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="Favicom.png" type="image/png">
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <!-- Sidebar Menu -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="Favicom.png" height="30px">
+            <h3>Vigia Planta</h3>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="Home.html" class="sidebar-link">
+                <i class="fas fa-home"></i>
+                <span>Início</span>
+            </a>
+            <a href="#" class="sidebar-link active">
+                <i class="fas fa-seedling"></i>
+                <span>Minhas Plantas</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-chart-pie"></i>
+                <span>Estatísticas</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fa-regular fa-credit-card"></i>
+                <span>Assinatura</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Calendário</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="user-info-sidebar">
+                <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
+                <div>
+                    <p>Usuário</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay para mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Conteúdo principal -->
+    <div class="main-wrapper">
+        <header class="top-bar">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <div class="top-actions">
+                <button class="notifications-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge">3</span>
+                </button>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário+S&bold=true&length=2" alt="Perfil">
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <!-- Hero Section -->
+            <div class="hero-card">
+                <div class="hero-card-header">
+                    <h1>Suas Plantas 🍂:</h1>
+                    <button class="action-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Nova Planta</span>
+                    </button> </div>
+                <div class="metrics-grid">
+                    <div class="plant-item urgent">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/podocarpo.jpg">
+                            <div class="plant-overlay">
+                            </div>
+                        </div>
+                        <h4>Podo Carpus (Externo)</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <div class="plant-item warning">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/podocarpo2.jpg">
+                        </div>
+                        <h4>Podo Carpus (Interno)</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    <div class="plant-item">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/croton.jpg">
+                        </div>
+                        <h4>Croton</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="plant-item">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/rosa.jpg">
+                        </div>
+                        <h4>Rosa</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="plant-item">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/costela.jpg">
+                            <div class="plant-overlay">
+                            </div>
+                        </div>
+                        <h4>Costela de Adão</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    <div class="plant-item">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/cacto.jpg">
+                        </div>
+                        <h4>Cacto</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 93%"></div>
+                        </div>
+                    </div>
+                    <div class="plant-item">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/lirio.jpg">
+                        </div>
+                        <h4>Lírio da Paz</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 98%"></div>
+                        </div>
+                    </div>
+                    <div class="plant-item">
+                        <div class="plant-preview">
+                            <img src="fotos-plantas/suculenta.jpg">
+                        </div>
+                        <h4>Suculenta</h4>
+                        <p>Nível de Umidade:</p>
+                        <div class="water-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                
+        // Menu toggle para mobile
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        }
+
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        // Fechar ao pressionar ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
