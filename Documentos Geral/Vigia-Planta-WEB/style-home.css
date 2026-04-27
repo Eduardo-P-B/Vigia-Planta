@@ -461,7 +461,7 @@ body {
     margin-bottom: 10px;
 }
 
-.water-progress {
+.progress-bar {
     width: 100%;
     height: 4px;
     background: #e0e0e0;
@@ -470,13 +470,19 @@ body {
     margin-bottom: 15px;
 }
 
-.progress-bar {
+.water-progress {
     height: 100%;
     background: linear-gradient(90deg, #4CAF50, #66BB6A);
     border-radius: 2px;
     transition: width 0.3s ease;
 }
 
+.sun-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #a7b124, #dbeb03);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
 
 /* Recommendation List */
 .recommendation-list {
