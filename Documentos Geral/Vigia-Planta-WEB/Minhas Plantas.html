@@ -61,6 +61,7 @@
             </button>
 
             <div class="top-actions">
+                <img src="fotos-plantas/LogoSemFundo.png" height="60rem">
                 <button class="notifications-btn">
                     <i class="fas fa-bell"></i>
                     <span class="badge">3</span>
@@ -209,7 +210,13 @@
 
             <div class="cad-planta hidden-card" id="cad-planta">
                 <div class="hero-card-header">
-                    <h1>Criar novas plantas 🍂:</h1>
+                    <div class="header-title-section">
+                        <i class="fas fa-seedling"></i>
+                        <div>
+                            <h1>Nova Planta</h1>
+                            <p>Adicione uma planta ao seu jardim</p>
+                        </div>
+                    </div>
                     <div class="hero-card-header-btns">
                         <button class="action-btn" id="voltar-home-btn">
                             <i class="fa-regular fa-circle-left"></i>
@@ -217,28 +224,106 @@
                         </button>
                     </div>
                 </div>
-                <form>
-                    <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-user"></i>
-                        Nome da Planta:
-                    </label>
-                    <input type="text" class="input-field" placeholder="Nome que você usará para identifica-la">
-                </div>
-                <div class="select-wrapper">
-                    <select class="input-field select-field">
-                            <option value="" disabled selected>Selecione o tipo de planta</option>
-                            <option value="ornamental">🌿 Planta Ornamental</option>
-                            <option value="suculenta">🌵 Suculenta / Cacto</option>
-                            <option value="frutifera">🍓 Planta Frutífera</option>
-                            <option value="aromática">🌿 Planta Aromática</option>
-                            <option value="flor">🌸 Flor / Planta Florífera</option>
-                            <option value="trepadeira">🍃 Trepadeira / Planta Pendente</option>
-                     </select>
-                    <div class="select-arrow">
-                        <i class="fas fa-chevron-down"></i>
+                
+                <form id="cadastro-planta-form">
+                    <div class="form-two-columns">
+                        <!-- Coluna da esquerda - Foto -->
+                        <div class="form-column photo-column">
+                            <div class="photo-upload-wrapper">
+                                <div class="photo-preview" id="photoPreview" onclick="document.getElementById('photoInput').click()">
+                                    <div class="preview-placeholder">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Foto da planta</span>
+                                        <small>Clique para adicionar</small>
+                                    </div>
+                                </div>
+                                
+                                <input type="file" id="photoInput" class="photo-input" accept="image/*" capture="environment" style="display: none;">
+                                
+                                <div class="photo-actions">
+                                    <button type="button" class="camera-photo-btn" onclick="document.getElementById('photoInput').click()">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Câmera</span>
+                                    </button>
+                                    <button type="button" class="clear-photo-btn" id="clearPhotoBtn">
+                                        <i class="fas fa-trash-alt"></i>
+                                        <span>Limpar</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coluna da direita - Dados da planta -->
+                        <div class="form-column data-column">
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-font"></i>
+                                    Nome da Planta
+                                </label>
+                                <input type="text" class="input-field" placeholder="Ex: Monstera Deliciosa" required>
+                                <span class="input-hint">Dê um nome único para identificar sua planta</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-tag"></i>
+                                    Espécie
+                                </label>
+                                <div class="select-wrapper">
+                                    <select class="input-field select-field" required>
+                                        <option value="" disabled selected>Selecione a espécie</option>
+                                        <optgroup label="🌿 Plantas Folhagens">
+                                            <option value="podocarpo">Podocarpo</option>
+                                            <option value="costela">Costela de Adão</option>
+                                            <option value="croton">Croton</option>
+                                            <option value="lirio">Lírio da Paz</option>
+                                        </optgroup>
+                                        <optgroup label="🌵 Suculentas e Cactos">
+                                            <option value="cacto">Cacto</option>
+                                            <option value="suculenta">Suculenta</option>
+                                        </optgroup>
+                                        <optgroup label="🌸 Flores">
+                                            <option value="rosa">Rosa</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="select-arrow">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Localização
+                                </label>
+                                <input type="text" class="input-field" placeholder="Ex: Sala, Varanda, Jardim">
+                            </div>
+
+                            <div class="input-row">
+                                <div class="input-group half">
+                                    <label class="input-label">
+                                        <i class="fas fa-calendar"></i>
+                                        Data de Plantio
+                                    </label>
+                                    <input type="date" class="input-field">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+
+
+                    <!-- Botões de ação -->
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" id="cancelar-btn">
+                            <i class="fas fa-times"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="submit-plant-btn">
+                            <i class="fas fa-save"></i>
+                            Salvar Planta
+                        </button>
+                    </div>
                 </form>
             </div>
             </div>
