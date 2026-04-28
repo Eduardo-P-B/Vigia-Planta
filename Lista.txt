@@ -3,6 +3,8 @@ Informacoes de plantas
 	  umidade
 	  temperatura
 	  luminosidade
+	  idade
+	  tamanho do vazo ideal
 	 }
 Cadastro dos usuarios
 	{ 
@@ -25,4 +27,3 @@ tutorial em video
 teste de ph (vende o do arduino separado ou explica um caseiro ou vende o de uso unico)
 ver as coisas que os usuarios tão fazendo (a planta mais cultivada, quantos novos e quantos inativos e talvez mais coisa)
 	}
-	
