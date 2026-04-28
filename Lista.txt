@@ -19,8 +19,10 @@ Plantas do usuario
 	}
 Opcional
 	{ 
+	piupiu de agua pra regar
 interconexao de arduino
 tutorial em video
 teste de ph (vende o do arduino separado ou explica um caseiro ou vende o de uso unico)
 ver as coisas que os usuarios tão fazendo (a planta mais cultivada, quantos novos e quantos inativos e talvez mais coisa)
 	}
+	
