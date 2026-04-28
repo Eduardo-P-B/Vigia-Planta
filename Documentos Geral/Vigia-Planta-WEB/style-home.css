@@ -552,25 +552,133 @@ body {
     font-size: 11px;
 }
 
-.ai-chat-btn {
-    width: 100%;
-    background: linear-gradient(135deg, #4CAF50, #2196F3);
-    border: none;
-    padding: 12px;
-    border-radius: 12px;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: all 0.3s ease;
+.input-group {
+    margin-bottom: 20px;
 }
 
-.ai-chat-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+.input-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+    background-color: rgba(226, 235, 215, 0.95);
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.input-label i {
+    margin-right: 8px;
+    color: #4CAF50;
+}
+
+.input-field {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+/* Wrapper do select para posicionar a seta */
+.select-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* Estilização do select */
+.select-field {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    background-color: white;
+    padding-right: 45px;
+}
+
+/* Seta personalizada */
+.select-arrow {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #999;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.select-wrapper:hover .select-arrow {
+    color: #4CAF50;
+}
+
+/* Estilo quando o select está focado */
+.select-field:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.select-field:focus + .select-arrow {
+    color: #4CAF50;
+}
+
+/* Estilo para as opções do select */
+.select-field option {
+    padding: 12px;
+    background-color: white;
+    color: #333;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Estilo para quando o select tem um valor válido */
+.select-field:valid {
+    color: #333;
+}
+
+/* Estilo para o placeholder/primeira opção */
+.select-field option[disabled] {
+    color: #999;
+}
+
+/* Responsividade para o select */
+@media (max-width: 768px) {
+    .select-field {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .select-arrow {
+        right: 14px;
+        font-size: 12px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .select-field {
+        background-color: #2a2a2a;
+        color: white;
+    }
+    
+    .select-field option {
+        background-color: #2a2a2a;
+        color: white;
+    }
+    
+    .select-field option[disabled] {
+        color: #666;
+    }
+    
+    .select-arrow {
+        color: #666;
+    }
+    
+    .select-wrapper:hover .select-arrow {
+        color: #4CAF50;
+    }
 }
 
 /* Responsividade */
