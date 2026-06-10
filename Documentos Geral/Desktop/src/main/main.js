@@ -17,11 +17,11 @@ const criarJanela = () => {
 };
 
 
-
 app.whenReady().then(() => {
     criarJanela();
 
     ipcMain.on('fechar', () => {
+        console.log('Fechando a aplicação...');
         app.quit(); // Comando poderoso do Node/Electron para matar o processo
     });
 });

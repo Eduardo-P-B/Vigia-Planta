@@ -118,23 +118,28 @@ body {
     font-size: 14px;
 }
 
-/* Overlay */
-.sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    opacity: 0;
-    visibility: hidden;
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 12px;
     transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
 }
 
-.sidebar-overlay.active {
-    opacity: 1;
-    visibility: visible;
+.logout-btn:hover {
+    background: rgba(220, 53, 69, 0.2);
+    color: #ff6b6b;
+    transform: translateX(5px);
 }
 
 /* Main Wrapper */
@@ -157,22 +162,6 @@ body {
     top: 0;
     z-index: 100;
     position: sticky;
-}
-
-.menu-toggle {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: #333;
-    cursor: pointer;
-    display: none;
-    padding: 8px;
-    border-radius: 10px;
-    transition: background 0.3s ease;
-}
-
-.menu-toggle:hover {
-    background: #f0f0f0;
 }
 
 .top-actions {
@@ -778,89 +767,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     .sidebar {
         left: 0;
     }
-    .menu-toggle {
-        display: none;
-    }
-}
 
-@media (max-width: 1023px) {
-    .menu-toggle {
-        display: block;
-    }
-    .hero-card {
-        flex-direction: column;
-        text-align: center;
-    }
-    .hero-content p {
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
-
-@media (max-width: 768px) {
-    .dashboard {
-        padding: 20px;
-    }
-    .hero-card {
-        padding: 30px 20px;
-    }
-    .hero-content h1 {
-        font-size: 28px;
-    }
-    .metrics-grid {
-        grid-template-columns: 1fr;
-    }
-    .plants-carousel {
-        grid-template-columns: 1fr;
-    }
-    .top-bar {
-        padding: 12px 20px;
-        gap: 12px;
-    }
-
-    /* Formulário */
-    .form-two-columns {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    .photo-column {
-        max-width: 300px;
-        margin: 0 auto;
-        width: 100%;
-    }
-    .input-row {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    .hero-card-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    .header-title-section {
-        flex-direction: column;
-        text-align: center;
-    }
-    .form-actions {
-        flex-direction: column;
-        display: flex;
-        gap: 15px;
-    }
-    .cancel-btn, .submit-plant-btn {
-        justify-content: center;
-        flex: 1;
-    }
-}
-
-@media (max-width: 480px) {
-    .cad-planta {
-        padding: 25px 20px;
-    }
-    .photo-actions {
-        flex-direction: column;
-    }
-    .top-actions {
-        gap: 10px;
-    }
 }
 
 /* Ajustes extras */
@@ -877,50 +784,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .sidebar-footer {
     flex-shrink: 0;
     margin-top: 20px;
-}
-
-@media (max-height: 600px) {
-    .sidebar {
-        padding: 20px 15px;
-    }
-    .sidebar-header {
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-    }
-    .sidebar-link {
-        padding: 8px 12px;
-    }
-    .user-info-sidebar img {
-        width: 40px;
-        height: 40px;
-    }
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    .select-field {
-        background-color: #2a2a2a;
-        color: white;
-    }
-    .select-field option {
-        background-color: #2a2a2a;
-        color: white;
-    }
-    .select-field option[disabled] {
-        color: #666;
-    }
-    .select-arrow {
-        color: #666;
-    }
-    .select-wrapper:hover .select-arrow {
-        color: #4CAF50;
-    }
-    .photo-preview {
-        background: rgba(42, 42, 42, 0.9);
-        border-color: #555;
-    }
-    .photo-preview span {
-        background: rgba(42, 42, 42, 0.9);
-        color: #ccc;
-    }
 }

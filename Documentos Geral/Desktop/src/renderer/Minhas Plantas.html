@@ -44,10 +44,6 @@
             </a>
         </nav>
         <div class="sidebar-footer">
-            <button id="sair-btn" class="sair-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                Sair
-            </button>
             <div class="user-info-sidebar">
                 <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true"
                     alt="Avatar">
@@ -55,6 +51,10 @@
                     <p>Usuário</p>
                 </div>
             </div>
+            <button class="logout-btn" id="sair-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </button>
         </div>
     </div>
 
@@ -64,9 +64,7 @@
     <!-- Conteúdo principal -->
     <div class="main-wrapper">
         <header class="top-bar">
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
+
 
             <div class="top-actions">
                 <img src="images/LogoSemFundo.png" height="60rem">
@@ -341,9 +339,6 @@
     </div>
 
     <script>
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
         const novaPlantaBtn = document.getElementById('nova-planta-btn');
         const heroCard = document.getElementById('hero-card');
         const cadCard = document.getElementById('cad-planta');
@@ -352,9 +347,11 @@
         let showHero = true;
 
         const botao = document.querySelector("#sair-btn");
-        botao.addEventListener("click", () => {
-            window.api.fecharApp();
-        });
+        if (botao) {
+            botao.addEventListener("click", () => {
+                window.api.fecharApp();
+            });
+        }
 
         function toggleCad() {
             if (showHero === true) {
@@ -368,22 +365,8 @@
             }
         }
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-        }
-
-        menuToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
-        novaPlantaBtn.addEventListener('click', toggleCad);
-        voltarToHeroBtn.addEventListener('click', toggleCad);
-
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-                toggleSidebar();
-            }
-        });
+        if (novaPlantaBtn) novaPlantaBtn.addEventListener('click', toggleCad);
+        if (voltarToHeroBtn) voltarToHeroBtn.addEventListener('click', toggleCad);
     </script>
 </body>
 

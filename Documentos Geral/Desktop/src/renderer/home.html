@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Vigia Planta</title>
     <link rel="stylesheet" href="CSS/style-home.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/Favicom.png" type="image/png">
 </head>
+
 <body>
     <div class="background-pattern"></div>
-    
+
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -41,29 +44,23 @@
             </a>
         </nav>
         <div class="sidebar-footer">
-            <button id="sair-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                Sair
-            </button>
             <div class="user-info-sidebar">
-                <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
+                <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true"
+                    alt="Avatar">
                 <div>
                     <p>Usuário</p>
                 </div>
             </div>
+            <button class="logout-btn" id="sair-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Sair</span>
+            </button>
         </div>
     </div>
-
-    <!-- Overlay para mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Conteúdo principal -->
     <div class="main-wrapper">
         <header class="top-bar">
-            <button class="menu-toggle" id="menuToggle">
-                <i class="fas fa-bars"></i>
-            </button>
-
             <div class="top-actions">
                 <img src="images/LogoSemFundo.png" height="60rem">
                 <button class="notifications-btn">
@@ -71,7 +68,8 @@
                     <span class="badge">3</span>
                 </button>
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário+S&bold=true&length=2" alt="Perfil">
+                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário+S&bold=true&length=2"
+                        alt="Perfil">
                 </div>
             </div>
         </header>
@@ -173,24 +171,13 @@
                     </div>
                 </div>
             </div>
+            <script>
+                const botao = document.querySelector("#sair-btn");
+                botao.addEventListener("click", () => {
+                    window.api.fecharApp();
+                });
 
-            <!-- Insights e Recomendações -->
-            
-
-
-
-    <script>
-        const botao = document.querySelector("#sair-btn");
-        botao.addEventListener("click", () => {
-            window.api.fecharApp();
-        });
-
-        // Fechar ao pressionar ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-                toggleSidebar();
-            }
-        });
-    </script>
+            </script>
 </body>
+
 </html>
