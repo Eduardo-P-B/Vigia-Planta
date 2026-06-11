@@ -23,7 +23,7 @@
                 <i class="fas fa-home"></i>
                 <span>Início</span>
             </a>
-            <a href="Minhas Plantas.html" class="sidebar-link">
+            <a href="Minhas Plantas.php" class="sidebar-link">
                 <i class="fas fa-seedling"></i>
                 <span>Minhas Plantas</span>
             </a>
@@ -122,7 +122,7 @@
             <div class="plants-section">
                 <div class="section-header">
                     <h2>🌱 Plantas que precisam de atenção</h2>
-                    <a href="Minhas Plantas.html" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
+                    <a href="Minhas Plantas.php" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="plants-carousel">
                     <div class="plant-item urgent">

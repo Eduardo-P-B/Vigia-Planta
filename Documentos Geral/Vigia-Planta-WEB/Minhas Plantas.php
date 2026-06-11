@@ -19,7 +19,7 @@
             <h3>Vigia Planta</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="Home.html" class="sidebar-link">
+            <a href="Home.php" class="sidebar-link">
                 <i class="fas fa-home"></i>
                 <span>Início</span>
             </a>

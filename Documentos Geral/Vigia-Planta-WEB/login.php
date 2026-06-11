@@ -18,18 +18,10 @@
                 </div>
                 <h1 class="logo-text">Vigia Planta</h1>
                 <p class="tagline">Suas plantas na palma da mão</p>
-                <p class="default-text">Cadastrar-se</p>
+                <h3 class="default-text">Entrar</h3>
             </div>
 
             <form class="login-form">
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-user"></i>
-                        Nome de Usuário
-                    </label>
-                    <input type="text" class="input-field" placeholder="Digite seu nome">
-                </div>
-
                 <div class="input-group">
                     <label class="input-label">
                         <i class="fas fa-envelope"></i>
@@ -51,26 +43,9 @@
                     </div>
                 </div>
 
-                <div class="input-group">
-                    <label class="input-label">
-                        <i class="fas fa-lock"></i>
-                        Confirmar Senha
-                    </label>
-                    <div class="password-wrapper">
-                        <input type="password" class="input-field" placeholder="Digite sua senha novamente">
-                        <button type="button" class="toggle-password">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
 
-                <div class="form-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox">
-                        <span class="checkbox-custom"></span>
-                        Lembrar-me
-                    </label>
-                </div>
+                <a href="Home.php">Debug</a>
+
 
                 <button type="submit" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i>
@@ -79,7 +54,7 @@
             </form>
 
             <div class="signup-prompt">
-                <p>Já tem uma conta? <a href="Login.html">Entrar</a></p>
+                <p>Não tem uma conta? <a href="Cadastro.php">Criar conta</a></p>
             </div>
 
             <div class="plant-decoration">
