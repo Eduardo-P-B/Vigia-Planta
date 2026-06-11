@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const db = require('../../dados.json');
 
 const criarJanela = () => {
     const janela = new BrowserWindow({
@@ -21,7 +22,11 @@ app.whenReady().then(() => {
     criarJanela();
 
     ipcMain.on('fechar', () => {
-        console.log('Fechando a aplicação...');
+        console.log('Fechando a aplicativo...');
         app.quit(); // Comando poderoso do Node/Electron para matar o processo
+    });
+
+    ipcMain.handle('pedir-plantas', () => {
+        return db;
     });
 });

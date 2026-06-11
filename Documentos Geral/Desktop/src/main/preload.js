@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld('api', {
     enviarMensagem: (texto) => {
         // Envia via Rádio IPC para o Main
         ipcRenderer.send('canal-mensagem', texto);
-    }
+    },
     
+    pedirPlantas: () => {
+        return ipcRenderer.invoke('pedir-plantas');
+    }
 });
