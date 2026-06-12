@@ -1,3 +1,88 @@
+<?php
+
+require "config.php";
+
+    if ($_SESSION['idUser'] == ""){
+        header("Location: login.php");
+        exit;
+    }else{
+
+    $id = $_SESSION["idUser"];
+
+        $sql = "SELECT nome FROM usuarios WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        $usuario = $resultado->fetch_assoc();
+
+        $nomeU = $usuario["nome"];
+
+        $erro = "";
+        $sucesso = "";
+
+        $nomeP = "";
+        $data = "";
+        $local = "";
+        $foto = "";
+        $especie = "";
+        $umidade = 37.67;
+        $luz = 50.2;
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $nomeP = trim($_POST['nomeP']);
+            $data = $_POST['data'];
+            $local = trim($_POST['local']);
+            $especie = trim($_POST['$especie']);
+            $foto = trim($_POST['$foto']);
+
+
+    // VALIDAÇÃO
+            if (empty($nomeP)) {
+                $erro .= "O nome da planta é obrigatório<br>";
+            }
+            if (empty($data)) {
+                $erro .= "A data do plantio da planta é obrigatória<br>";
+            }
+            if (empty($local)) {
+                $erro .= "O local da planta é obrigatório<br>";
+            }
+         if (empty($especie)) {
+                $erro .= "A especie da planta é obrigatória<br>";
+            }
+            if (empty($foto)) {
+                $erro .= "Uma foto da planta é obrigatória<br>";
+            }
+
+    // PROCESSAMENTO
+            if ($erro == "") {
+
+               $sql = "INSERT INTO planta (nomeP, especie, localizacao, dataPlantio, foto, umidade, luz, userId) VALUES ('$nomeP', '$especie', '$local', '$data', '$foto', '$umidade', '$luz', '$id')";
+
+                /*$stmt*/
+                $executaQuery = $conn->query($sql);
+
+                if ($executaQuery) {
+                    $sucesso = "Usuário cadastrado com sucesso!";
+                   //limpar os campos
+                    $nomeP = "";
+                    $especie = "";
+                    $local = "";
+                    $data = "";
+                    $foto = "";
+
+               } else {
+               $erro = "Erro ao cadastrar usuario";
+                }
+            }
+        }
+
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -44,7 +129,7 @@
             <div class="user-info-sidebar">
                 <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
                 <div>
-                    <p>Usuário</p>
+                    <p><?=$nomeU?></p>
                 </div>
             </div>
         </div>
@@ -225,7 +310,7 @@
                     </div>
                 </div>
                 
-                <form id="cadastro-planta-form">
+                <form id="cadastro-planta-form" method="POST" enctype="multipart/form-data">
                     <div class="form-two-columns">
                         <!-- Coluna da esquerda - Foto -->
                         <div class="form-column photo-column">
@@ -238,17 +323,21 @@
                                     </div>
                                 </div>
                                 
-                                <input type="file" id="photoInput" class="photo-input" accept="image/*" capture="environment" style="display: none;">
+                                <input type="file" id="photoInput" class="photo-input" accept="image/*" style="display: none;" name="foto" required>
                                 
                                 <div class="photo-actions">
                                     <button type="button" class="camera-photo-btn" onclick="document.getElementById('photoInput').click()">
                                         <i class="fas fa-camera"></i>
                                         <span>Câmera</span>
                                     </button>
-                                    <button type="button" class="clear-photo-btn" id="clearPhotoBtn">
-                                        <i class="fas fa-trash-alt"></i>
-                                        <span>Limpar</span>
-                                    </button>
+                                    <?php
+                                        if ($erro != "") {
+                                            echo "<div style='color: red; border: 1px solid red; padding: 10px;'> $erro </div>";
+                                        }
+                                        if ($sucesso != "") {
+                                              echo "<div style='color: green; border: 1px solid green; padding: 10px;'> $sucesso </div>";
+                                        }
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -260,7 +349,7 @@
                                     <i class="fas fa-font"></i>
                                     Nome da Planta
                                 </label>
-                                <input type="text" class="input-field" placeholder="Ex: Cronton (Externo)" required>
+                                <input type="text" class="input-field" placeholder="Ex: Cronton (Externo)" required name="nomeP">
                                 <span class="input-hint">Dê um nome único para identificar sua planta</span>
                             </div>
 
@@ -270,7 +359,7 @@
                                     Espécie
                                 </label>
                                 <div class="select-wrapper">
-                                    <select class="input-field select-field" required>
+                                    <select class="input-field select-field" required name="especie">
                                         <option value="" disabled selected>Selecione a espécie</option>
                                         <optgroup label="🌿 Plantas Folhagens">
                                             <option value="podocarpo">Podocarpo</option>
@@ -297,7 +386,7 @@
                                     <i class="fas fa-map-marker-alt"></i>
                                     Localização
                                 </label>
-                                <input type="text" class="input-field" placeholder="Ex: Sala, Varanda, Jardim">
+                                <input type="text" class="input-field" placeholder="Ex: Sala, Varanda, Jardim" name="local">
                             </div>
 
                             <div class="input-row">
@@ -306,7 +395,7 @@
                                         <i class="fas fa-calendar"></i>
                                         Data de Plantio
                                     </label>
-                                    <input type="date" class="input-field">
+                                    <input type="date" class="input-field" name="data">
                                 </div>
                             </div>
                         </div>
@@ -315,10 +404,6 @@
 
                     <!-- Botões de ação -->
                     <div class="form-actions">
-                        <button type="button" class="cancel-btn" id="cancelar-btn">
-                            <i class="fas fa-times"></i>
-                            Cancelar
-                        </button>
                         <button type="submit" class="submit-plant-btn">
                             <i class="fas fa-save"></i>
                             Salvar Planta

@@ -1,3 +1,40 @@
+<?php
+
+    require "config.php";
+
+    if ($_SESSION['idUser'] == ""){
+        header("Location: login.php");
+        exit;
+    }else{
+
+        $id = $_SESSION["idUser"];
+
+        $sql = "SELECT nome FROM usuarios WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        $usuario = $resultado->fetch_assoc();
+
+        $nomeU = $usuario["nome"];
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -44,7 +81,7 @@
             <div class="user-info-sidebar">
                 <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
                 <div>
-                    <p>Usuário</p>
+                    <p><?=$nomeU?></p>
                 </div>
             </div>
         </div>
@@ -76,7 +113,7 @@
             <!-- Hero Section -->
             <div class="hero-card">
                 <div class="hero-content">
-                    <h1>Olá, Usuário! 🌿</h1>
+                    <h1>Olá, <?=$nomeU?>! 🌿</h1>
                 </div>
                 <div class="metrics-grid">
                     <div class="metric-card">

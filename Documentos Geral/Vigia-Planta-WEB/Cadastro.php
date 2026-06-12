@@ -13,9 +13,9 @@ $senha2 = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $nome = trim($_POST['nome']);
-    $email = $_POST['email'];
-    $senha1 = $_POST['senha1'];
-    $senha2 = $_POST['senha2'];
+    $email = trim($_POST['email']);
+    $senha1 = trim($_POST['senha1']);
+    $senha2 = trim($_POST['senha2']);
 
 
     // VALIDAÇÃO
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $nome = "";
             $email = "";
             $senha1 = "";
-            $senha1 = "";
+            $senha2 = "";
 
         } else {
             $erro = "Erro ao cadastrar usuario";
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <p class="default-text">Cadastrar-se</p>
             </div>
 
-            <form class="login-form">
+            <form class="login-form" method="POST">
                 <div class="input-group">
                     <label class="input-label">
                         <i class="fas fa-user"></i>
@@ -136,9 +136,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 ?>
 
-                <button type="submit" class="login-btn">
+                <button type="submit" class="login-btn" onclick="window.location.href='login.php'">
                     <i class="fas fa-sign-in-alt"></i>
-                    Entrar
+                    Cadastrar
                 </button>
             </form>
 

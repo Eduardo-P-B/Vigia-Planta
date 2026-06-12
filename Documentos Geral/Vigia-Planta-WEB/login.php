@@ -1,3 +1,54 @@
+<?php
+
+require "config.php";
+
+$erro = "";
+$sucesso = "";
+
+$senha = "";
+$email = "";
+ 
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $email = trim($_POST['email']);
+    $senha = trim($_POST['senha']);
+
+
+    if ($email == "" || $senha == "") {
+        $erro = "Preencha os campos<br>";
+    }else {
+
+    $sql = "SELECT * FROM user WHERE email = ?";
+
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bind_param("s", $email);
+
+    $stmt->execute();
+
+
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows > 0) {
+        $usuario = $resultado->fetch_assoc();
+    } else {
+        $erro = "E-mail ou senha invalidos";
+    }
+
+    if ($senha != $usuario['senha']) {
+        $erro = "E-mail ou senha invalidos";
+    }
+
+    session_start();  
+    
+        $_SESSION['idUser'] = [$usuario["id"]];
+    }
+
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -21,13 +72,13 @@
                 <h3 class="default-text">Entrar</h3>
             </div>
 
-            <form class="login-form">
+            <form class="login-form" method="POST">
                 <div class="input-group">
                     <label class="input-label">
                         <i class="fas fa-envelope"></i>
                         Email
                     </label>
-                    <input type="email" class="input-field" placeholder="Digite seu email">
+                    <input type="email" class="input-field" placeholder="Digite seu email" name="email">
                 </div>
 
                 <div class="input-group">
@@ -36,18 +87,24 @@
                         Senha
                     </label>
                     <div class="password-wrapper">
-                        <input type="password" class="input-field" placeholder="Digite sua senha">
-                        <button type="button" class="toggle-password">
+                        <input type="password" class="input-field" placeholder="Digite sua senha" name="senha">
+                        <button type="button" class="toggle-password" id="btnsenha">
                             <i class="fas fa-eye"></i>
                         </button>
                     </div>
                 </div>
 
+                <?php
+                    if ($erro != "") {
+                        echo "<div style='color: red; border: 1px solid red; padding: 10px;'> $erro </div>";
+                    }
+                    if ($sucesso != "") {
+                        echo "<div style='color: green; border: 1px solid green; padding: 10px;'> $sucesso </div>";
+                    }
+                ?>
 
-                <a href="Home.php">Debug</a>
 
-
-                <button type="submit" class="login-btn">
+                <button type="submit" class="login-btn" onclick="window.location.href='home.php'">
                     <i class="fas fa-sign-in-alt"></i>
                     Entrar
                 </button>
@@ -64,5 +121,21 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+        let senha = document.querySelector("#senha");
+        const btnsenha = document.querySelector("#btnsenha");
+
+        btnsenha.addEventListener("click", () => {
+            if (senha.type === "password") {
+                senha.type = "text";
+            } else {
+                senha.type = "password";
+            }
+        });
+
+    </script>
+
 </body>
 </html>
