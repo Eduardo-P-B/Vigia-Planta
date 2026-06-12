@@ -41,6 +41,12 @@ const desenharTela = (listaParaDesenhar) => {
     document.querySelector("#conteudo").innerHTML = html;
 };
 
+document.querySelector("#salvar-btn").addEventListener("click", () => {
+    if (form.checkValidity()) {
+        window.api.abrirModalSucesso(); // Pede ao garçom para abrir a tela
+    }
+});
+
 const iniciarApp = async () => {
     listaPlantas = await window.api.pedirPlantas();
     desenharTela(listaPlantas);
