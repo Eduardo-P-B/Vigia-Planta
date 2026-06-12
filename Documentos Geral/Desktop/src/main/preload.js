@@ -12,5 +12,9 @@ contextBridge.exposeInMainWorld('api', {
     
     pedirPlantas: () => {
         return ipcRenderer.invoke('pedir-plantas');
+    },
+
+    abrirModalSucesso: () => {
+        ipcRenderer.send('abrir-modal-sucesso');
     }
 });
