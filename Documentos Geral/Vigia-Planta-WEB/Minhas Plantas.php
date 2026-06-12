@@ -28,8 +28,8 @@ require "config.php";
         $local = "";
         $foto = "";
         $especie = "";
-        $umidade = 37.67;
-        $luz = 50.2;
+        $umidade = 67;
+        $luz = 69;
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -79,7 +79,6 @@ require "config.php";
                 }
             }
         }
-
     }
 ?>
 
@@ -174,122 +173,34 @@ require "config.php";
                     </div>
                 </div>
                 <div class="metrics-grid">
-                    <div class="plant-item urgent">
-                        <div class="plant-preview">
-                            <img src="images/podocarpo.jpg">
-                            <div class="plant-overlay">
-                            </div>
-                        </div>
-                        <h4>Podo Carpus (Externo)</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 20%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 95%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item warning">
-                        <div class="plant-preview">
-                            <img src="images/podocarpo2.jpg">
-                        </div>
-                        <h4>Podo Carpus (Interno)</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 70%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 40%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/croton.jpg">
-                        </div>
-                        <h4>Croton</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 60%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/rosa.jpg">
-                        </div>
-                        <h4>Rosa</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 85%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 67%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/costela.jpg">
-                            <div class="plant-overlay">
-                            </div>
-                        </div>
-                        <h4>Costela de Adão</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 70%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 80%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/cacto.jpg">
-                        </div>
-                        <h4>Cacto</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 75%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 95%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/lirio.jpg">
-                        </div>
-                        <h4>Lírio da Paz</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 100%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 80%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/suculenta.jpg">
-                        </div>
-                        <h4>Suculenta</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 100%"></div>
-                        </div>
-                        <p>Nível de luz Solar</p>
-                        <div class="progress-bar">
-                            <div class="sun-progress" style="width: 95%"></div>
-                        </div>
-                    </div>
+
+                    <?php 
+
+                        while ($linha = $resultado->fetcg_assoc()){
+
+                        //<div class="plant-item urgent">
+                        //<div class="plant-item warning">
+
+                            echo "<div class='plant-item'>";
+                                echo "<div class='plant-preview'>";
+                                    echo "<img src='images/" . $linha['foto'] . "<br>'>";
+                                echo "</div>";
+                                echo "<h4>" . $linha['nome'] . "</h4>";
+                                echo "<p>Nível de Umidade:</p>";
+                                echo "<div class='progress-bar'>";
+                                  echo "<div class='water-progress' style='width: " . $linha['umidade'] . "%'></div>";
+                                echo "</div>";
+                                    echo "<p>Nível de luz Solar</p>";
+                                echo "<div class='progress-bar'>";
+                                   echo "<div class='sun-progress' style='width: " . $linha['luz'] . "%'></div>";
+                                echo "</div>";
+                                echo "<a href='editar.php?nomeP=" . $linha['nome'] ."'>EDITAR DADOS</a><br>";
+                                echo "<a href='excluir.php?nomeP=" . $linha['nome'] ."' onclick='return confirm(\"Tem certeza que deseja excluir este produto?\")'>EXCLUIR PLANTA</a>";
+                            echo "</div>";
+
+                        };
+
+                    ?>
                 </div>
             </div>
 
