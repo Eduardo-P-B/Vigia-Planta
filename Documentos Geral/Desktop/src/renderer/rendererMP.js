@@ -41,12 +41,6 @@ const desenharTela = (listaParaDesenhar) => {
     document.querySelector("#conteudo").innerHTML = html;
 };
 
-document.querySelector("#salvar-btn").addEventListener("click", () => {
-    if (form.checkValidity()) {
-        window.api.abrirModalSucesso(); // Pede ao garçom para abrir a tela
-    }
-});
-
 const iniciarApp = async () => {
     listaPlantas = await window.api.pedirPlantas();
     desenharTela(listaPlantas);
@@ -72,23 +66,35 @@ barraBusca.addEventListener("input", () => {
 });
 
 
-form.addEventListener("submit", (e) => {
+document.querySelector("#cadastro-planta-form").addEventListener("submit", async(e) => {
     e.preventDefault();
 
-    const extrator = new FormData(form);
-    const novaPlanta = Object.fromEntries(extrator);
+    const dados = Object.fromEntries(new FormData(e.target));
+    dados.nivelUmidade = 100
+    dados.nivelLuz = 100
+    dados.imagem = null;
 
-    console.log(novaPlanta);
+    if (!dados.imagem){
+        dados.imagem = "plantaPadrao.png";
+    }
 
-    novaPlanta.nivelUmidade = 100;
-    novaPlanta.nivelLuz = 100;
-    novaPlanta.imagem = "plantaPadrao.png";
+    console.log(dados);
 
-    listaPlantas.push(novaPlanta);
+    const salvarSucesso = await window.api.salvarPlanta(dados);
+    if  (salvarSucesso) {
+        form.reset();
+        window.api.abrirModalSucesso();
+    }
+
+    listaPlantas.push(dados);
 
     desenharTela(listaPlantas);
 
     form.reset();
+});
+
+window.api.onAtualizarTela(() => {
+    iniciarApp();
 });
 
 const novaPlantaBtn = document.getElementById('nova-planta-btn');

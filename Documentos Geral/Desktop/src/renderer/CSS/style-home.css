@@ -230,6 +230,33 @@ body {
     overflow: hidden;
 }
 
+#conteudo {
+    margin-bottom: 0;
+}
+
+.plants-scroll-area::-webkit-scrollbar {
+    width: 10px;
+}
+
+.plants-scroll-area::-webkit-scrollbar-track {
+    background: #dce8d0;
+    border-radius: 999px;
+}
+
+.plants-scroll-area::-webkit-scrollbar-thumb {
+    background: #2e7d32;
+    border-radius: 999px;
+}
+
+.plants-scroll-area::-webkit-scrollbar-thumb:hover {
+    background: #1b5e20;
+}
+
+.plants-scroll-area {
+    height: 65vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
 
 .cad-planta {
     background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%);
@@ -384,7 +411,7 @@ body {
 /* Metrics Grid */
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     margin-bottom: 40px;
 }
@@ -501,7 +528,7 @@ body {
 
 .plants-carousel {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 
@@ -877,14 +904,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 /* Responsividade */
-@media (min-width: 1024px) {
-    .main-wrapper {
-        margin-left: 280px;
-    }
-    .sidebar {
-        left: 0;
-    }
+.main-wrapper {
+    margin-left: 280px;
+}
 
+.sidebar {
+    left: 0;
 }
 
 /* Ajustes extras */
