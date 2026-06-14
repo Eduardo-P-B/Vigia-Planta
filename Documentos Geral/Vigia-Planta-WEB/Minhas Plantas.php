@@ -176,7 +176,7 @@ require "config.php";
 
                     <?php 
 
-                        while ($linha = $resultado->fetcg_assoc()){
+                        while ($linha = $resultado->fetch_assoc()){
 
                         //<div class="plant-item urgent">
                         //<div class="plant-item warning">

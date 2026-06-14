@@ -1,12 +1,20 @@
 <?php
 
-require "config.php";
+    require "config.php";
 
-$erro = "";
-$sucesso = "";
+    session_start();  
 
-$senha = "";
-$email = "";
+    if ($_SESSION['idUser'] != "")
+        {
+        header("Location: home.php");
+        exit;
+        }
+
+    $erro = "";
+    $sucesso = "";
+
+    $senha = "";
+    $email = "";
  
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -29,21 +37,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $resultado = $stmt->get_result();
 
-    if ($resultado->num_rows > 0) {
+    if ($resultado->num_rows == 1) {
         $usuario = $resultado->fetch_assoc();
+
+        if ($senha != $usuario['senha']) {
+        $erro = "E-mail ou senha invalidos";
+        }else {
+    
+        $_SESSION['idUser'] = $usuario["id"];
+
+        if ($_SESSION['idUser'] != "")
+        {
+        header("Location: home.php");
+        exit;
+        }
+        }
     } else {
         $erro = "E-mail ou senha invalidos";
     }
 
-    if ($senha != $usuario['senha']) {
-        $erro = "E-mail ou senha invalidos";
-    }
-
-    session_start();  
-    
-        $_SESSION['idUser'] = [$usuario["id"]];
-    }
-
+}
 }
 
 
@@ -87,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         Senha
                     </label>
                     <div class="password-wrapper">
-                        <input type="password" class="input-field" placeholder="Digite sua senha" name="senha">
+                        <input type="password" class="input-field" placeholder="Digite sua senha" name="senha" id="senha">
                         <button type="button" class="toggle-password" id="btnsenha">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -103,8 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     }
                 ?>
 
-
-                <button type="submit" class="login-btn" onclick="window.location.href='home.php'">
+                <!-- onclick="window.location.href='home.php'" -->
+                <button type="submit" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i>
                     Entrar
                 </button>

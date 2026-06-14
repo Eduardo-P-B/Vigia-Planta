@@ -53,6 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $senha1 = "";
             $senha2 = "";
 
+            header("Location: login.php");
+            exit;
+
         } else {
             $erro = "Erro ao cadastrar usuario";
         }
@@ -136,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 ?>
 
-                <button type="submit" class="login-btn" onclick="window.location.href='login.php'">
+                <button type="submit" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i>
                     Cadastrar
                 </button>
