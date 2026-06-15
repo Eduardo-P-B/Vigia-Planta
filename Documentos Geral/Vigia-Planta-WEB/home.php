@@ -1,5 +1,10 @@
 <?php
 
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
+    session_start(); 
+
     require "config.php";
 
     if ($_SESSION['idUser'] == ""){
@@ -9,7 +14,7 @@
 
         $id = $_SESSION["idUser"];
 
-        $sql = "SELECT nome FROM usuarios WHERE id = ?";
+        $sql = "SELECT nome FROM user WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();

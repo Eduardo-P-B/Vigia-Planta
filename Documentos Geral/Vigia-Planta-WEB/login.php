@@ -1,8 +1,8 @@
 <?php
 
-    require "config.php";
+    session_start(); 
 
-    session_start();  
+    require "config.php"; 
 
     if ($_SESSION['idUser'] != "")
         {

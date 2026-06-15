@@ -1,6 +1,11 @@
 <?php
 
-require "config.php";
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
+    session_start(); 
+
+    require "config.php";
 
     if ($_SESSION['idUser'] == ""){
         header("Location: login.php");
@@ -9,7 +14,7 @@ require "config.php";
 
     $id = $_SESSION["idUser"];
 
-        $sql = "SELECT nome FROM usuarios WHERE id = ?";
+        $sql = "SELECT nome FROM user WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id);
         $stmt->execute();
@@ -36,8 +41,13 @@ require "config.php";
             $nomeP = trim($_POST['nomeP']);
             $data = $_POST['data'];
             $local = trim($_POST['local']);
-            $especie = trim($_POST['$especie']);
-            $foto = trim($_POST['$foto']);
+            $especie = $_POST['$especie'];
+            $foto = trim($_POST['foto']);
+
+            $nomeArquivo = $_FILES["foto"]["name"];
+            $arquivoTemp = $_FILES["foto"]["tmp_name"];
+
+            $caminho = "images/" . $nomeArquivo;
 
 
     // VALIDAÇÃO
@@ -232,7 +242,7 @@ require "config.php";
                                         <span>Foto da planta</span>
                                         <small>Clique para adicionar</small>
                                     </div>
-                                </div>
+                                </div> 
                                 
                                 <input type="file" id="photoInput" class="photo-input" accept="image/*" style="display: none;" name="foto" required>
                                 
