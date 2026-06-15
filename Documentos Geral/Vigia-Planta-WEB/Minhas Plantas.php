@@ -12,7 +12,7 @@
         exit;
     }else{
 
-    $id = $_SESSION["idUser"];
+        $id = $_SESSION["idUser"];
 
         $sql = "SELECT nome FROM user WHERE id = ?";
         $stmt = $conn->prepare($sql);
@@ -31,7 +31,6 @@
         $nomeP = "";
         $data = "";
         $local = "";
-        $foto = "";
         $especie = "";
         $umidade = 67;
         $luz = 69;
@@ -41,13 +40,14 @@
             $nomeP = trim($_POST['nomeP']);
             $data = $_POST['data'];
             $local = trim($_POST['local']);
-            $especie = $_POST['$especie'];
-            $foto = trim($_POST['foto']);
+            $especie = $_POST['especie'];
 
-            $nomeArquivo = $_FILES["foto"]["name"];
+            $nomeArquivo = time() . "_" . $_FILES["foto"]["name"];
             $arquivoTemp = $_FILES["foto"]["tmp_name"];
 
-            $caminho = "images/" . $nomeArquivo;
+            $foto = "images/" . $nomeArquivo;
+
+            move_uploaded_file($arquivoTemp, $foto);
 
 
     // VALIDAÇÃO
@@ -70,7 +70,7 @@
     // PROCESSAMENTO
             if ($erro == "") {
 
-               $sql = "INSERT INTO planta (nomeP, especie, localizacao, dataPlantio, foto, umidade, luz, userId) VALUES ('$nomeP', '$especie', '$local', '$data', '$foto', '$umidade', '$luz', '$id')";
+               $sql = "INSERT INTO planta (nome, especie, localizacao, dataPlantio, foto, umidade, luz, userId) VALUES ('$nomeP', '$especie', '$local', '$data', '$foto', '$umidade', '$luz', '$id')";
 
                 /*$stmt*/
                 $executaQuery = $conn->query($sql);
@@ -184,7 +184,7 @@
                 </div>
                 <div class="metrics-grid">
 
-                    <?php 
+                    <?php
 
                         while ($linha = $resultado->fetch_assoc()){
 
@@ -251,14 +251,6 @@
                                         <i class="fas fa-camera"></i>
                                         <span>Câmera</span>
                                     </button>
-                                    <?php
-                                        if ($erro != "") {
-                                            echo "<div style='color: red; border: 1px solid red; padding: 10px;'> $erro </div>";
-                                        }
-                                        if ($sucesso != "") {
-                                              echo "<div style='color: green; border: 1px solid green; padding: 10px;'> $sucesso </div>";
-                                        }
-                                    ?>
                                 </div>
                             </div>
                         </div>
