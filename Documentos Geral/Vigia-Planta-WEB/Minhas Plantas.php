@@ -45,10 +45,11 @@
             $nomeArquivo = time() . "_" . $_FILES["foto"]["name"];
             $arquivoTemp = $_FILES["foto"]["tmp_name"];
 
-            $foto = "images/" . $nomeArquivo;
+            $foto = $nomeArquivo;
 
             move_uploaded_file($arquivoTemp, $foto);
 
+            
 
     // VALIDAÇÃO
             if (empty($nomeP)) {
@@ -186,6 +187,13 @@
 
                     <?php
 
+                    $sql = "SELECT * FROM planta WHERE userId = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $id);
+                    $stmt->execute();
+
+                    $resultado = $stmt->get_result();
+
                         while ($linha = $resultado->fetch_assoc()){
 
                         //<div class="plant-item urgent">
@@ -193,7 +201,7 @@
 
                             echo "<div class='plant-item'>";
                                 echo "<div class='plant-preview'>";
-                                    echo "<img src='images/" . $linha['foto'] . "<br>'>";
+                                    echo "<img src=' " . $linha['foto'] . " '<br>>";
                                 echo "</div>";
                                 echo "<h4>" . $linha['nome'] . "</h4>";
                                 echo "<p>Nível de Umidade:</p>";

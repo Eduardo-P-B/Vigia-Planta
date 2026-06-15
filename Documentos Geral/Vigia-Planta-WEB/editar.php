@@ -1,5 +1,7 @@
 <?php
-require "config.php";
+    require "config.php";
+
+    session_start();
 
  if ($_SESSION['idUser'] == ""){
         header("Location: login.php");
