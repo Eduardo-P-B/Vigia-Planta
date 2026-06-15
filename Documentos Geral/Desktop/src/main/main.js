@@ -9,23 +9,23 @@ const criarJanela = () => {
     janela = new BrowserWindow({
         width: 800,
         height: 600,
-        frame: true,
-        fullscreen: false,
+        frame: false,
+        fullscreen: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         },
     });
     janela.loadFile('../renderer/home.html');
     // Abre o painel lateral do desenvolvedor
-    janela.webContents.openDevTools();
+    // janela.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
     criarJanela();
-    ipcMain.on('abrir-modal-sucesso', () => {
+    ipcMain.on('abrir-modal-cadastro', () => {
         janelaModal = new BrowserWindow({
-            width: 400,
-            height: 200,
+            width: 1000,
+            height: 600,
             parent: janela,
             modal: true,
             frame: false,
@@ -33,7 +33,7 @@ app.whenReady().then(() => {
                 preload: path.join(__dirname, 'preload.js')
             },
         });
-        janelaModal.loadFile('../renderer/sucessoCadastro.html')
+        janelaModal.loadFile('../renderer/cadastroPlanta.html')
     });
 
 
@@ -45,7 +45,7 @@ app.whenReady().then(() => {
         return db;
     });
 
-    ipcMain.on('fechar-modal-sucesso', () => {
+    ipcMain.on('fechar-modal-cadastro', () => {
         if (janelaModal) {
             janelaModal.close();
         }

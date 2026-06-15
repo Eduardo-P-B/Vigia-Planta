@@ -16,12 +16,12 @@ contextBridge.exposeInMainWorld('api', {
         return ipcRenderer.invoke('pedir-plantas');
     },
 
-    abrirModalSucesso: () => {
-        ipcRenderer.send('abrir-modal-sucesso');
+    abrirModalCadastro: () => {
+        ipcRenderer.send('abrir-modal-cadastro');
     },
 
-    fecharModalSucesso: () => {
-        ipcRenderer.send('fechar-modal-sucesso');
+    fecharModalCadastro: () => {
+        ipcRenderer.send('fechar-modal-cadastro');
     },
 
     salvarPlanta: (dados) => ipcRenderer.invoke('salvar', dados),

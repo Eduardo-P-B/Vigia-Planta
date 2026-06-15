@@ -1,7 +1,5 @@
 let listaPlantas = [];
 
-const form = document.querySelector("#cadastro-planta-form");
-
 const desenharTela = (listaParaDesenhar) => {
 
     const html = listaParaDesenhar.map(plant => {
@@ -65,63 +63,15 @@ barraBusca.addEventListener("input", () => {
 
 });
 
-
-document.querySelector("#cadastro-planta-form").addEventListener("submit", async(e) => {
-    e.preventDefault();
-
-    const dados = Object.fromEntries(new FormData(e.target));
-    dados.nivelUmidade = 100
-    dados.nivelLuz = 100
-    dados.imagem = null;
-
-    if (!dados.imagem){
-        dados.imagem = "plantaPadrao.png";
-    }
-
-    console.log(dados);
-
-    const salvarSucesso = await window.api.salvarPlanta(dados);
-    if  (salvarSucesso) {
-        form.reset();
-        window.api.abrirModalSucesso();
-    }
-
-    listaPlantas.push(dados);
-
-    desenharTela(listaPlantas);
-
-    form.reset();
-});
-
 window.api.onAtualizarTela(() => {
     iniciarApp();
 });
 
-const novaPlantaBtn = document.getElementById('nova-planta-btn');
-const heroCard = document.getElementById('hero-card');
-const cadCard = document.getElementById('cad-planta');
-const voltarToHeroBtn = document.getElementById('voltar-home-btn');
-
-let showHero = true;
-
 const botao = document.querySelector("#sair-btn");
-if (botao) {
-    botao.addEventListener("click", () => {
-        window.api.fecharApp();
-    });
-}
+botao.addEventListener("click", () => {
+    window.api.fecharApp();
+});
 
-function toggleCad() {
-    if (showHero === true) {
-        heroCard.classList.add('hidden-card');
-        cadCard.classList.remove('hidden-card');
-        showHero = false;
-    } else {
-        cadCard.classList.add('hidden-card');
-        heroCard.classList.remove('hidden-card');
-        showHero = true;
-    }
-}
-
-if (novaPlantaBtn) novaPlantaBtn.addEventListener('click', toggleCad);
-if (voltarToHeroBtn) voltarToHeroBtn.addEventListener('click', toggleCad);
+document.querySelector("#nova-planta-btn").addEventListener("click", () => {
+    window.api.abrirModalCadastro();
+});
