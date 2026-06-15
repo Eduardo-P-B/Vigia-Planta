@@ -1,0 +1,23 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet">
+</head>
+
+<body>
+    <div class="background-pattern" style="background: linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%)">
+        <div class="success-container"
+            style="margin: 20px; justify-content: center; align-items: center; display: flex; flex-direction: column;">
+            <h1 style="color: white; text-align: center;">Cadastro realizado com sucesso!</h1>
+            <button id="sair-btn" class="action-btn">Ir para o início</button>
+        </div>
+    </div>
+</body>
+<script>
+    document.getElementById('sair-btn').addEventListener('click', () => {
+        window.api.fecharModalSucesso();
+    });
+</script>
+
+</html>
