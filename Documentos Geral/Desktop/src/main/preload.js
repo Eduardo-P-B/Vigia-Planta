@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 contextBridge.exposeInMainWorld('api', {
     fecharApp: () => ipcRenderer.send('fechar'),
 
-    
+
 
     // Eu crio um comando chamado "enviarMensagem"
     // que o HTML vai poder usar!
@@ -26,5 +26,9 @@ contextBridge.exposeInMainWorld('api', {
 
     salvarPlanta: (dados) => ipcRenderer.invoke('salvar', dados),
 
-    onAtualizarTela: (funcaoCallback) => ipcRenderer.on('atualizar-tela', funcaoCallback)
+    onAtualizarTela: (funcaoCallback) => ipcRenderer.on('atualizar-tela', funcaoCallback),
+
+    pedirDeletarPlanta: (id) => {
+    return ipcRenderer.invoke('deletar-planta', id);
+}
 });

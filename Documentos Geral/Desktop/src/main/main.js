@@ -1,6 +1,10 @@
 const { app, BrowserWindow, ipcMain, Menu, Tray, dialog } = require('electron');
 const path = require('path');
-const db = require('../../dados.json');
+const fs = require('fs');
+const caminhoDB = path.join(__dirname, '../../dados.json');
+let db = JSON.parse(
+    fs.readFileSync(caminhoDB, 'utf-8')
+);
 let janela;
 let janelaModal;
 let tray = null;
@@ -9,8 +13,8 @@ const criarJanela = () => {
     janela = new BrowserWindow({
         width: 1920,
         height: 1080,
-        frame: true,
-        fullscreen: false,
+        frame: false,
+        fullscreen: true,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         },
@@ -29,32 +33,6 @@ const criarMenuPrincipal = (janelaDialog) => {
                 { label: 'Sair Imediatamente', role: 'quit', accelerator: 'CmdOrCtrl+Q' }
             ],
         },
-        {
-            label: 'Operações',
-            submenu: [
-                {
-                    label: 'Remover Último Produto',
-                    click: async () => {
-                        // 1. Mostra o diálogo de confirmação
-                        const resposta = await dialog.showMessageBox({
-                            type: 'warning',
-                            title: 'Remover Produto',
-                            message: 'Tem certeza que deseja remover o último produto?',
-                            detail: `Vai sumir: "${db[db.length - 1].nome}"`,
-                            buttons: ['Sim, remover', 'Cancelar'],
-                            defaultId: 1,
-                            cancelId: 1
-                        });
-
-                        // 2. Decide com base no índice do botão clicado
-                        if (resposta.response === 0) {
-                            db.pop(); // Remove do array em memória
-                            janela.webContents.send('atualizar-tela');
-                        }
-                    }
-                }
-            ]
-        }
     ];
 
     // 2. Transforma a receita em um Menu de verdade
@@ -63,6 +41,14 @@ const criarMenuPrincipal = (janelaDialog) => {
     // 3. Aplica o menu à nossa aplicação inteira!
     Menu.setApplicationMenu(menuReal);
 };
+
+function salvarDB() {
+    fs.writeFileSync(
+        caminhoDB,
+        JSON.stringify(db, null, 2),
+        'utf-8'
+    );
+}
 
 app.whenReady().then(() => {
     criarJanela();
@@ -99,9 +85,24 @@ app.whenReady().then(() => {
     });
 
     ipcMain.handle('salvar', (e, dados) => {
-        db.push(dados);
+
+        const maiorId = db.length > 0
+            ? Math.max(...db.map(planta => planta.id))
+            : 0;
+
+        const novaPlanta = {
+            id: maiorId + 1,
+            ...dados
+        };
+
+        db.push(novaPlanta);
+
+        salvarDB();
+
         janela.webContents.send('atualizar-tela');
+
         return true;
+
     });
 
     // CHAME a função aqui!
@@ -141,4 +142,27 @@ app.whenReady().then(() => {
     });
 
     tray.setContextMenu(menuDoTray);
+});
+
+ipcMain.handle('deletar-planta', async (e, id) => {
+    const planta = db.find(p => p.id === id);
+    const respostaDeletar = await dialog.showMessageBox({
+        type: 'warning',
+        title: 'Remover Planta',
+        message: `Tem certeza que deseja excluir "${planta.nome}"?`,
+        buttons: ['Sim, remover', 'Cancelar'],
+        defaultId: 1,
+        cancelId: 1
+    });
+
+    // 1. Mostra o diálogo de confirmação
+    // 2. Decide com base no índice do botão clicado
+    if (respostaDeletar.response === 0) {
+        const indice = db.findIndex(p => p.id === id);
+        if (indice !== -1) {
+            db.splice(indice, 1);
+            salvarDB();
+        }
+    }
+    return db;
 });
