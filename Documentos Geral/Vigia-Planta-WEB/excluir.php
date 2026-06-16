@@ -12,9 +12,9 @@ if ($_SESSION['idUser'] == ""){
 
     $nomeP = $_GET['nomeP'];
 
-$nomeP = $_GET['nomeP'];
+$idP = $_GET['idP'];
 
-$sql = "DELETE FROM planta where userId = '$id' and nome = '$nomeP'";
+$sql = "DELETE FROM planta where userId = '$id' and id = '$idP'";
 
 $conn->query($sql);
 

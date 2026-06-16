@@ -214,9 +214,9 @@
                                 echo "</div>";
                                 echo "<div class='plant-actions'>";
 
-                                echo "<a class='btn-edit' href='editar.php?nomeP=" . $linha['nome'] . "'> ✏️ Editar </a>";
+                                echo "<a class='btn-edit' href='editar.php?idP=" . $linha['id'] . "'> ✏️ Editar </a>";
 
-                                echo "<a class='btn-delete' href='excluir.php?nomeP=" . $linha['nome'] . "' onclick='return confirm(\"Tem certeza que deseja excluir esta planta?\")'>🗑️ Excluir </a>";
+                                echo "<a class='btn-delete' href='excluir.php?idP=" . $linha['id'] . "' onclick='return confirm(\"Tem certeza que deseja excluir esta planta?\")'>🗑️ Excluir </a>";
 
                                 echo "</div>";
                                 echo "</div>";

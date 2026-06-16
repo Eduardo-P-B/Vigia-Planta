@@ -7,32 +7,96 @@
 
     session_start();
 
- if ($_SESSION['idUser'] == ""){
+if ($_SESSION['idUser'] == ""){
         header("Location: login.php");
         exit;
     }else{
 
-        $nomeP = $_GET['nomeP'];
-
         $id = $_SESSION["idUser"];
 
-        $sql = "SELECT * FROM planta where userId = $id and nome = $nomeP";
+        $sql = "SELECT nome FROM user WHERE id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
 
-        $resultado = $conn->query($sql);
+        $resultado = $stmt->get_result();
 
-        $produto = $resultado->fetch_assoc();
+        $usuario = $resultado->fetch_assoc();
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $nome = $_POST['nome'];
-            $preco = $_POST['preco'];
-            $quantidade = $_POST['quantidade'];
+        $idP = $_GET['idP'];
 
-            $sql = "UPDATE Produtos SET nome='$nome', preco=$preco, quantidade=$quantidade WHERE id=$id";
+        $erro = "";
+        $sucesso = "";
 
-            $conn->query($sql);
+        $nomeP = "";
+        $data = "";
+        $local = "";
+        $especie = "";
 
-            header("Location: listar.php");
-            exit;
+        $sql = "SELECT * FROM planta WHERE userId = ? and id = '$idP'";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $id);
+                    $stmt->execute();
+
+                    $resultado = $stmt->get_result();
+
+                    $linha = $resultado->fetch_assoc();
+
+                    $nomeP = $linha['nome'];
+                    $data = $linha['dataPlantio'];
+                    $local = $linha['localizacao'];
+                    $especie = $linha['especie'];
+
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $nomeP = trim($_POST['nomeP']);
+            $data = $_POST['data'];
+            $local = trim($_POST['local']);
+            $especie = $_POST['especie'];
+
+
+
+            
+
+    // VALIDAÇÃO
+            if (empty($nomeP)) {
+                $erro .= "O nome da planta é obrigatório<br>";
+            }
+            if (empty($data)) {
+                $erro .= "A data do plantio da planta é obrigatória<br>";
+            }
+            if (empty($local)) {
+                $erro .= "O local da planta é obrigatório<br>";
+            }
+         if (empty($especie)) {
+                $erro .= "A especie da planta é obrigatória<br>";
+            }
+
+    // PROCESSAMENTO
+            if ($erro == "") {
+
+               $sql = "UPDATE planta set nome = '$nomeP', especie = '$especie', localizacao = '$local', dataPlantio = '$data' where id = '$idP' and userId = '$id'";
+
+                /*$stmt*/
+                $executaQuery = $conn->query($sql);
+
+                if ($executaQuery) {
+                    $sucesso = "Usuário cadastrado com sucesso!";
+                   //limpar os campos
+                    $nomeP = "";
+                    $especie = "";
+                    $local = "";
+                    $data = "";
+                    $foto = "";
+
+                    header("Location: Minhas Plantas.php");
+                    exit;
+
+               } else {
+               $erro = "Erro ao cadastrar usuario";
+                }
+            }
         }
     }
 ?>
@@ -50,22 +114,76 @@
 </head>
 <body>
 
-<h1>Editar Produto</h1>
+<form id="cadastro-planta-form" method="POST" enctype="multipart/form-data">
+                    <div class="form-two-columns">
+                        <!-- Coluna da direita - Dados da planta -->
+                        <div class="form-column data-column">
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-font"></i>
+                                    Nome da Planta
+                                </label>
+                                <input type="text" class="input-field" placeholder="Ex: Cronton (Externo)" name="nomeP" value='<?=$nomeP?>'>
+                                <span class="input-hint">Dê um nome <b>único</b> para identificar sua planta</span>
+                            </div>
 
-    <form method="POST">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" value="<?= $produto['nome'] ?>"><br><br>
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-tag"></i>
+                                    Espécie
+                                </label>
+                                <div class="select-wrapper">
+                                    <select class="input-field select-field" required name="especie" value='<?=$especie?>'>
+                                        <option value="" disabled selected>Selecione a espécie</option>
+                                        <optgroup label="🌿 Plantas Folhagens">
+                                            <option value="podocarpo">Podocarpo</option>
+                                            <option value="costela de adao">Costela de Adão</option>
+                                            <option value="croton">Croton</option>
+                                            <option value="lirio">Lírio da Paz</option>
+                                        </optgroup>
+                                        <optgroup label="🌵 Suculentas e Cactos">
+                                            <option value="cacto">Cacto</option>
+                                            <option value="suculenta">Suculenta</option>
+                                        </optgroup>
+                                        <optgroup label="🌸 Flores">
+                                            <option value="rosa">Rosa</option>
+                                        </optgroup>
+                                    </select>
+                                    <div class="select-arrow">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                </div>
+                            </div>
 
-        <label for="preco">Preço:</label>
-        <input type="number" id="preco" name="preco" step="0.01" value="<?= $produto['preco'] ?>"><br><br>
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Localização
+                                </label>
+                                <input type="text" class="input-field" placeholder="Ex: Sala, Varanda, Jardim" name="local" value='<?=$local?>'>
+                            </div>
 
-        <label for="quantidade">Quantidade:</label>
-        <input type="number" id="quantidade" name="quantidade" value="<?= $produto['quantidade'] ?>"><br><br>
+                            <div class="input-row">
+                                <div class="input-group half">
+                                    <label class="input-label">
+                                        <i class="fas fa-calendar"></i>
+                                        Data de Plantio
+                                    </label>
+                                    <input type="date" class="input-field" name="data" value='<?=$data?>'>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <button type="submit">Salvar Alterações</button>
-    </form>
 
-    <a href="listar.php">Voltar para a lista de produtos</a>
+                    <!-- Botões de ação -->
+                    <div class="form-actions">
+                        <button type="submit" class="submit-plant-btn">
+                            <i class="fas fa-save"></i>
+                            Salvar Planta
+                        </button>
+                    </div>
+                </form>
 
 </body>
     
