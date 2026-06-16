@@ -172,12 +172,17 @@ ipcMain.on('sair-app', async () => {
         type: 'warning',
         title: 'Fechar app',
         message: `Quer mesmo sair?`,
-        buttons: ['Sim, sair', 'Encerrar Sessão'],
-        defaultId: 1,
-        cancelId: 1
+        buttons: ['Sim, sair','Deixar em Segundo Plano','Encerrar Sessão', 'cancelar'],
+        defaultId: 3,
+        cancelId: 3
     });
     if (respostaDeletar.response === 0) {
         app.isQuitting = true;
         app.quit(app.isQuitting);
+    }
+    if (respostaDeletar.response === 1) {
+        app.quit();
+    }
+    if (respostaDeletar.response === 2) {
     }
 });
