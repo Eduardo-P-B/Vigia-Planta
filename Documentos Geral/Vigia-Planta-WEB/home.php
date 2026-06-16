@@ -25,6 +25,15 @@
 
         $nomeU = $usuario["nome"];
 
+        $sql = "SELECT * FROM planta WHERE userId = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        $linhas = $resultado->num_rows;
+
     }
 
 ?>
@@ -38,7 +47,7 @@
     <link rel="stylesheet" href="CSS/style-home.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="images/Favicom.png" type="image/png">
+    <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
 </head>
 <body>
     <div class="background-pattern"></div>
@@ -46,7 +55,7 @@
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="images/Favicom.png" height="30px">
+            <img src="images/sempre/Favicom.png" height="30px">
             <h3>Vigia Planta</h3>
         </div>
         <nav class="sidebar-nav">
@@ -92,7 +101,7 @@
             </button>
 
             <div class="top-actions">
-                <img src="images/LogoSemFundo.png" height="60rem">
+                <img src="images/sempre/LogoSemFundo.png" height="60rem">
                 <button class="notifications-btn">
                     <i class="fas fa-bell"></i>
                     <span class="badge">3</span>
@@ -115,7 +124,7 @@
                             <i class="fas fa-leaf"></i>
                         </div>
                         <div class="metric-info">
-                            <h3>24</h3>
+                            <h3><?= $linhas?></h3>
                             <p>Plantas no total</p>
                         </div>
                     </div>
@@ -124,7 +133,7 @@
                             <i class="fas fa-tint"></i>
                         </div>
                         <div class="metric-info">
-                            <h3>8</h3>
+                            <h3>0</h3>
                             <p>Precisam de água</p>
                         </div>
                     </div>
@@ -133,7 +142,7 @@
                             <i class="fas fa-sun"></i>
                         </div>
                         <div class="metric-info">
-                            <h3>92%</h3>
+                            <h3>70%</h3>
                             <p>Nível de luz solar média</p>
                         </div>
                     </div>
@@ -142,7 +151,7 @@
                             <i class="fas fa-calendar-week"></i>
                         </div>
                         <div class="metric-info">
-                            <h3>15</h3>
+                            <h3>0</h3>
                             <p>Tarefas hoje</p>
                         </div>
                     </div>
@@ -156,7 +165,7 @@
                     <a href="Minhas Plantas.php" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="plants-carousel">
-                    <div class="plant-item urgent">
+                    <!-- <div class="plant-item urgent">
                         <div class="plant-preview">
                             <img src="images/podocarpo.jpg">
                             <div class="plant-overlay">
@@ -168,7 +177,7 @@
                             <div class="water-progress" style="width: 20%"></div>
                         </div>
                     </div>
-                    <div class="plant-item warning">
+                     <div class="plant-item warning">
                         <div class="plant-preview">
                             <img src="images/podocarpo2.jpg">
                         </div>
@@ -187,17 +196,8 @@
                         <div class="progress-bar">
                             <div class="water-progress" style="width: 60%"></div>
                         </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/rosa.jpg">
-                        </div>
-                        <h4>Rosa</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 85%"></div>
-                        </div>
-                    </div>
+                    </div> -->
+                    
                 </div>
             </div>
 

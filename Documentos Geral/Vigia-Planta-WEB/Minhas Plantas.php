@@ -102,7 +102,7 @@
     <link rel="stylesheet" href="CSS/style-home.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="images/Favicom.png" type="image/png">
+    <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
 </head>
 <body>
     <div class="background-pattern"></div>
@@ -110,7 +110,7 @@
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="images/Favicom.png" height="30px">
+            <img src="images/sempre/Favicom.png" height="30px">
             <h3>Vigia Planta</h3>
         </div>
         <nav class="sidebar-nav">
@@ -156,7 +156,7 @@
             </button>
 
             <div class="top-actions">
-                <img src="images/LogoSemFundo.png" height="60rem">
+                <img src="images/sempre/LogoSemFundo.png" height="60rem">
                 <button class="notifications-btn">
                     <i class="fas fa-bell"></i>
                     <span class="badge">3</span>
@@ -212,9 +212,18 @@
                                 echo "<div class='progress-bar'>";
                                    echo "<div class='sun-progress' style='width: " . $linha['luz'] . "%'></div>";
                                 echo "</div>";
-                                echo "<a href='editar.php?nomeP=" . $linha['nome'] ."'>EDITAR DADOS</a><br>";
-                                echo "<a href='excluir.php?nomeP=" . $linha['nome'] ."' onclick='return confirm(\"Tem certeza que deseja excluir este produto?\")'>EXCLUIR PLANTA</a>";
-                            echo "</div>";
+                                echo "<div class='plant-actions'>";
+
+                                echo "<a class='btn-edit' href='editar.php?nomeP=" . $linha['nome'] . "'>
+                                       ✏️ Editar
+                                      </a>";
+
+                                echo "<a class='btn-delete' href='excluir.php?nomeP=" . $linha['nome'] . "' 
+                                        onclick='return confirm(\"Tem certeza que deseja excluir esta planta?\")'>
+                                        🗑️ Excluir
+                                      </a>";
+
+                                echo "</div>";
 
                         };
 
@@ -284,7 +293,7 @@
                                         <option value="" disabled selected>Selecione a espécie</option>
                                         <optgroup label="🌿 Plantas Folhagens">
                                             <option value="podocarpo">Podocarpo</option>
-                                            <option value="costela">Costela de Adão</option>
+                                            <option value="costela de adao">Costela de Adão</option>
                                             <option value="croton">Croton</option>
                                             <option value="lirio">Lírio da Paz</option>
                                         </optgroup>
