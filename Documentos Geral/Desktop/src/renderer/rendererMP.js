@@ -81,13 +81,12 @@ barraBusca.addEventListener("input", () => {
 });
 
 window.api.onAtualizarTela(() => {
-    console.log("Ouvi o chamado do Node!");
     iniciarApp();
 });
 
 const botao = document.querySelector("#sair-btn");
 botao.addEventListener("click", () => {
-    window.api.fecharApp();
+    window.api.sairApp();
 });
 
 document.querySelector("#nova-planta-btn").addEventListener("click", () => {
