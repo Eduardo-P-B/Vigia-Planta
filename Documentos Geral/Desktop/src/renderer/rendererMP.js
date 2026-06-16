@@ -15,6 +15,9 @@ const desenharTela = (listaParaDesenhar) => {
 
         return `
             <div class="plant-item ${classeCard}">
+                <button class="delete-btn" data-id="${plant.id}">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
                 <div class="plant-preview">
                     <img src="images/${plant.imagem}" alt="${plant.nome}">
                 </div>
@@ -37,6 +40,20 @@ const desenharTela = (listaParaDesenhar) => {
     }).join("");
 
     document.querySelector("#conteudo").innerHTML = html;
+
+    document.querySelectorAll(".delete-btn").forEach(botao => {
+
+        botao.addEventListener("click", async () => {
+
+            const id = Number(botao.dataset.id);
+
+            listaPlantas = await window.api.pedirDeletarPlanta(id);
+
+            desenharTela(listaPlantas);
+
+        });
+
+    });
 };
 
 const iniciarApp = async () => {
@@ -76,3 +93,5 @@ botao.addEventListener("click", () => {
 document.querySelector("#nova-planta-btn").addEventListener("click", () => {
     window.api.abrirModalCadastro();
 });
+
+

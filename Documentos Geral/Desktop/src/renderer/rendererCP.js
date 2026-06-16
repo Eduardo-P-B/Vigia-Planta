@@ -1,7 +1,7 @@
 const form = document.querySelector("#cadastro-planta-form");
 
 
-document.querySelector("#cadastro-planta-form").addEventListener("submit", async(e) => {
+document.querySelector("#cadastro-planta-form").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const dados = Object.fromEntries(new FormData(e.target));
@@ -9,14 +9,14 @@ document.querySelector("#cadastro-planta-form").addEventListener("submit", async
     dados.nivelLuz = 100;
     dados.imagem = null;
 
-    if (!dados.imagem){
+    if (!dados.imagem) {
         dados.imagem = "plantaPadrao.png";
     }
 
     console.log(dados);
 
     const salvarSucesso = await window.api.salvarPlanta(dados);
-    if  (salvarSucesso) {
+    if (salvarSucesso) {
         window.close();
     }
 
@@ -26,3 +26,14 @@ document.querySelector("#cadastro-planta-form").addEventListener("submit", async
 
 
 });
+
+const botao = document.querySelector("#voltar-btn");
+botao.addEventListener("click", () => {
+    window.close();
+});
+
+const cancelarBtn = document.querySelector("#cancelar-btn");
+cancelarBtn.addEventListener("click", () => {
+    form.reset();
+});
+
