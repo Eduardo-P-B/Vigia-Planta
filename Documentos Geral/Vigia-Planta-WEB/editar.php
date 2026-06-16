@@ -1,4 +1,8 @@
 <?php
+
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+
     require "config.php";
 
     session_start();
@@ -42,7 +46,7 @@
     <link rel="stylesheet" href="CSS/style-home.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="images/Favicom.png" type="image/png">
+    <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
 </head>
 <body>
 
