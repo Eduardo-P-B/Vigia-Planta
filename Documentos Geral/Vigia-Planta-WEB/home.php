@@ -80,6 +80,9 @@
                 <span>Calendário</span>
             </a>
         </nav>
+        <a href="sair.php" class="btn-delete">SAIR</a>
+
+
         <div class="sidebar-footer">
             <div class="user-info-sidebar">
                 <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
