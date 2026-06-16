@@ -501,10 +501,12 @@ class _LoginScreenState extends State<LoginScreen> {
           onTap: () => Navigator.pop(context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: 
-                  const Icon(Icons.arrow_back, color: Color.fromARGB(255, 3, 87, 31)),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Color.fromARGB(255, 3, 87, 31),
             ),
           ),
+        ),
         title: const Text(
           'Login',
           style: TextStyle(
@@ -703,6 +705,25 @@ class _CadastroScreenState extends State<CadastroScreen> {
   bool _aceitaTermos = false;
   bool _obscureSenha = true;
   bool _obscureConfirmar = true;
+  int _currentStep = 0;
+
+  final List<Map<String, dynamic>> _steps = [
+    {
+      'title': 'Dados Pessoais',
+      'icon': Icons.person_outline,
+      'description': 'Vamos começar com suas informações básicas',
+    },
+    {
+      'title': 'Segurança',
+      'icon': Icons.lock_outline,
+      'description': 'Crie uma senha segura para sua conta',
+    },
+    {
+      'title': 'Preferências',
+      'icon': Icons.notifications_active,
+      'description': 'Configure suas preferências de notificação',
+    },
+  ];
 
   @override
   void dispose() {
@@ -714,8 +735,46 @@ class _CadastroScreenState extends State<CadastroScreen> {
     super.dispose();
   }
 
+  void _nextStep() {
+    if (_currentStep == 0) {
+      if (_nomeController.text.isNotEmpty &&
+          _emailController.text.isNotEmpty &&
+          _emailController.text.contains('@') &&
+          _telefoneController.text.isNotEmpty) {
+        setState(() => _currentStep++);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Preencha todos os campos corretamente!'),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } else if (_currentStep == 1) {
+      if (_senhaController.text.length >= 6 &&
+          _confirmarSenhaController.text == _senhaController.text) {
+        setState(() => _currentStep++);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Verifique se a senha tem pelo menos 6 caracteres e está correta!',
+            ),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
+
+  void _previousStep() {
+    setState(() => _currentStep--);
+  }
+
   void _cadastrar() {
-    if (_formKey.currentState!.validate() && _aceitaTermos) {
+    if (_formKey.currentState!.validate()) {
       UserManager.adicionarUsuario(
         Usuario(
           nome: _nomeController.text,
@@ -729,18 +788,12 @@ class _CadastroScreenState extends State<CadastroScreen> {
         const SnackBar(
           content: Text('Cadastro realizado com sucesso! 🎉'),
           backgroundColor: Color(0xFF4CAF50),
+          behavior: SnackBarBehavior.floating,
         ),
       );
       Future.delayed(const Duration(seconds: 1), () {
         if (mounted) Navigator.pop(context);
       });
-    } else if (!_aceitaTermos) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Você precisa aceitar os termos de uso!'),
-          backgroundColor: Colors.orange,
-        ),
-      );
     }
   }
 
@@ -749,172 +802,445 @@ class _CadastroScreenState extends State<CadastroScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F8F0),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1B5E20),
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child:
-                  const Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 255, 255)),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.9),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 4,
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Color(0xFF2E7D32),
+              size: 24,
             ),
           ),
-        title: const Text(
-          'Cadastro',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        centerTitle: true,
+        title: const Text(
+          'Voltar',
+          style: TextStyle(
+            color: Color(0xFF2E7D32),
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        centerTitle: false,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              _buildInputField(
-                controller: _nomeController,
-                label: 'Nome Completo',
-                icon: Icons.person,
-                hint: 'Digite seu nome completo',
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Digite seu nome' : null,
-              ),
-              const SizedBox(height: 16),
-              _buildInputField(
-                controller: _emailController,
-                label: 'E-mail',
-                icon: Icons.email,
-                hint: 'seu@email.com',
-                keyboardType: TextInputType.emailAddress,
-                validator: (v) {
-                  if (v == null || v.isEmpty) return 'Digite seu e-mail';
-                  if (!v.contains('@')) return 'E-mail inválido';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildPasswordField(
-                controller: _senhaController,
-                label: 'Senha',
-                icon: Icons.lock,
-                hint: 'Mínimo 6 caracteres',
-                obscureText: _obscureSenha,
-                onToggle: () => setState(() => _obscureSenha = !_obscureSenha),
-                validator: (v) {
-                  if (v == null || v.isEmpty) return 'Digite sua senha';
-                  if (v.length < 6) return 'Mínimo 6 caracteres';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildPasswordField(
-                controller: _confirmarSenhaController,
-                label: 'Confirmar Senha',
-                icon: Icons.lock_outline,
-                hint: 'Digite a senha novamente',
-                obscureText: _obscureConfirmar,
-                onToggle: () =>
-                    setState(() => _obscureConfirmar = !_obscureConfirmar),
-                validator: (v) {
-                  if (v == null || v.isEmpty) return 'Confirme sua senha';
-                  if (v != _senhaController.text) return 'Senhas não conferem';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              _buildInputField(
-                controller: _telefoneController,
-                label: 'Telefone',
-                icon: Icons.phone,
-                hint: '(11) 99999-9999',
-                keyboardType: TextInputType.phone,
-                validator: (v) =>
-                    v == null || v.isEmpty ? 'Digite seu telefone' : null,
-              ),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Row(
-                      children: [
-                        Icon(Icons.notifications, color: Color(0xFF4CAF50)),
-                        SizedBox(width: 8),
-                        Text(
-                          'Receber lembretes de rega',
-                          style: TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    Switch(
-                      value: _aceitaTermos,
-                      onChanged: (value) =>
-                          setState(() => _aceitaTermos = value),
-                      activeColor: const Color(0xFF4CAF50),
-                    ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Header animado
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Color(0xFF1B5E20),
+                    Color(0xFF2E7D32),
+                    Color(0xFF4CAF50),
                   ],
                 ),
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(35),
+                  bottomRight: Radius.circular(35),
                 ),
-                child: Row(
-                  children: [
-                    Checkbox(
-                      value: _aceitaTermos,
-                      onChanged: (value) =>
-                          setState(() => _aceitaTermos = value ?? false),
-                      activeColor: const Color(0xFF4CAF50),
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () =>
-                            setState(() => _aceitaTermos = !_aceitaTermos),
-                        child: const Text(
-                          'Li e aceito os termos de uso e política de privacidade',
-                          style: TextStyle(fontSize: 13),
+              ),
+              child: Column(
+                children: [
+                  TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0, end: 1),
+                    duration: const Duration(milliseconds: 600),
+                    builder: (context, double value, child) =>
+                        Transform.scale(scale: value, child: child),
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/Logo_Sem_Fundo_Branca.png',
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                                Icons.eco,
+                                color: Colors.white,
+                                size: 40,
+                              ),
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton.icon(
-                  onPressed: _cadastrar,
-                  icon: const Icon(Icons.check_circle, color: Colors.white),
-                  label: const Text(
-                    'Cadastrar',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4CAF50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Criar Conta',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  Text(
+                    _steps[_currentStep]['description'],
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withValues(alpha: 0.85),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+            // Step indicator
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Row(
+                children: List.generate(_steps.length, (index) {
+                  bool isActive = index == _currentStep;
+                  bool isCompleted = index < _currentStep;
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          height: 3,
+                          decoration: BoxDecoration(
+                            color: isCompleted
+                                ? const Color(0xFF4CAF50)
+                                : isActive
+                                ? const Color(0xFF4CAF50).withValues(alpha: 0.5)
+                                : Colors.grey[300],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: isCompleted
+                                ? const Color(0xFF4CAF50)
+                                : isActive
+                                ? Colors.white
+                                : Colors.grey[200],
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isCompleted || isActive
+                                  ? const Color(0xFF4CAF50)
+                                  : Colors.grey[300]!,
+                              width: 2,
+                            ),
+                          ),
+                          child: Icon(
+                            isCompleted ? Icons.check : _steps[index]['icon'],
+                            size: 18,
+                            color: isCompleted
+                                ? Colors.white
+                                : isActive
+                                ? const Color(0xFF4CAF50)
+                                : Colors.grey[400],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _steps[index]['title'],
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: isActive
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                            color: isActive || isCompleted
+                                ? const Color(0xFF4CAF50)
+                                : Colors.grey[500],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ),
+            // Formulário
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      // Step 1: Dados Pessoais
+                      if (_currentStep == 0) ...[
+                        _buildAnimatedInput(
+                          controller: _nomeController,
+                          label: 'Nome Completo',
+                          icon: Icons.person_outline,
+                          hint: 'Digite seu nome completo',
+                          validator: (v) =>
+                              v == null || v.isEmpty ? 'Digite seu nome' : null,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildAnimatedInput(
+                          controller: _emailController,
+                          label: 'E-mail',
+                          icon: Icons.email_outlined,
+                          hint: 'seu@email.com',
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return 'Digite seu e-mail';
+                            if (!v.contains('@')) return 'E-mail inválido';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildAnimatedInput(
+                          controller: _telefoneController,
+                          label: 'Telefone',
+                          icon: Icons.phone_outlined,
+                          hint: '(11) 99999-9999',
+                          keyboardType: TextInputType.phone,
+                          validator: (v) => v == null || v.isEmpty
+                              ? 'Digite seu telefone'
+                              : null,
+                        ),
+                      ],
+                      // Step 2: Segurança
+                      if (_currentStep == 1) ...[
+                        _buildAnimatedPasswordField(
+                          controller: _senhaController,
+                          label: 'Senha',
+                          icon: Icons.lock_outline,
+                          hint: 'Mínimo 6 caracteres',
+                          obscureText: _obscureSenha,
+                          onToggle: () =>
+                              setState(() => _obscureSenha = !_obscureSenha),
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return 'Digite sua senha';
+                            if (v.length < 6) return 'Mínimo 6 caracteres';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildAnimatedPasswordField(
+                          controller: _confirmarSenhaController,
+                          label: 'Confirmar Senha',
+                          icon: Icons.lock_outline,
+                          hint: 'Digite a senha novamente',
+                          obscureText: _obscureConfirmar,
+                          onToggle: () => setState(
+                            () => _obscureConfirmar = !_obscureConfirmar,
+                          ),
+                          validator: (v) {
+                            if (v == null || v.isEmpty)
+                              return 'Confirme sua senha';
+                            if (v != _senhaController.text)
+                              return 'Senhas não conferem';
+                            return null;
+                          },
+                        ),
+                      ],
+                      // Step 3: Preferências (Versão Simplificada)
+                      if (_currentStep == 2) ...[
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            children: [
+                              // Notificações
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 45,
+                                        height: 45,
+                                        decoration: BoxDecoration(
+                                          color: const Color(
+                                            0xFF4CAF50,
+                                          ).withValues(alpha: 0.1),
+                                          borderRadius: BorderRadius.circular(
+                                            14,
+                                          ),
+                                        ),
+                                        child: const Icon(
+                                          Icons.notifications_active,
+                                          color: Color(0xFF4CAF50),
+                                          size: 24,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      const Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Receber lembretes de rega',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Receba notificações das plantas',
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF888888),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Switch(
+                                    value: _aceitaTermos,
+                                    onChanged: (value) =>
+                                        setState(() => _aceitaTermos = value),
+                                    activeColor: const Color(0xFF4CAF50),
+                                    activeTrackColor: const Color(0xFF81C784),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE8F5E9),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.security,
+                                color: Color(0xFF4CAF50),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  'Suas informações estão seguras e não serão compartilhadas com terceiros.',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[700],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 32),
+                      // Botões de navegação
+                      Row(
+                        children: [
+                          if (_currentStep > 0)
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: _previousStep,
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: Color(0xFF4CAF50),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Voltar',
+                                  style: TextStyle(color: Color(0xFF4CAF50)),
+                                ),
+                              ),
+                            ),
+                          if (_currentStep > 0) const SizedBox(width: 16),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _currentStep < 2
+                                  ? _nextStep
+                                  : _cadastrar,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF4CAF50),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _currentStep < 2
+                                        ? 'Continuar'
+                                        : 'Cadastrar',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  if (_currentStep < 2) ...[
+                                    const SizedBox(width: 8),
+                                    const Icon(
+                                      Icons.arrow_forward,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildInputField({
+  Widget _buildAnimatedInput({
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -922,26 +1248,38 @@ class _CadastroScreenState extends State<CadastroScreen> {
     TextInputType keyboardType = TextInputType.text,
     String? Function(String?)? validator,
   }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(icon, color: const Color(0xFF4CAF50)),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF4CAF50), width: 2),
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 400),
+      builder: (context, double value, child) => Transform.translate(
+        offset: Offset(0, 20 * (1 - value)),
+        child: Opacity(opacity: value, child: child),
+      ),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        validator: validator,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: Icon(icon, color: const Color(0xFF4CAF50)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFF4CAF50), width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.grey[300]!),
+          ),
+          filled: true,
+          fillColor: Colors.white,
         ),
-        filled: true,
-        fillColor: Colors.white,
       ),
     );
   }
 
-  Widget _buildPasswordField({
+  Widget _buildAnimatedPasswordField({
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -950,25 +1288,37 @@ class _CadastroScreenState extends State<CadastroScreen> {
     required VoidCallback onToggle,
     String? Function(String?)? validator,
   }) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: Icon(icon, color: const Color(0xFF4CAF50)),
-        suffixIcon: IconButton(
-          icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
-          onPressed: onToggle,
+    return TweenAnimationBuilder(
+      tween: Tween<double>(begin: 0, end: 1),
+      duration: const Duration(milliseconds: 400),
+      builder: (context, double value, child) => Transform.translate(
+        offset: Offset(0, 20 * (1 - value)),
+        child: Opacity(opacity: value, child: child),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscureText,
+        validator: validator,
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          prefixIcon: Icon(icon, color: const Color(0xFF4CAF50)),
+          suffixIcon: IconButton(
+            icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+            onPressed: onToggle,
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: const BorderSide(color: Color(0xFF4CAF50), width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(color: Colors.grey[300]!),
+          ),
+          filled: true,
+          fillColor: Colors.white,
         ),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF4CAF50), width: 2),
-        ),
-        filled: true,
-        fillColor: Colors.white,
       ),
     );
   }
@@ -1007,10 +1357,12 @@ class _BuscaScreenState extends State<BuscaScreen> {
           onTap: () => Navigator.pop(context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child:
-                  const Icon(Icons.arrow_back, color: Color.fromARGB(255, 255, 255, 255)),
+            child: const Icon(
+              Icons.arrow_back,
+              color: Color.fromARGB(255, 255, 255, 255),
             ),
           ),
+        ),
         title: const Text(
           'Buscar Usuários',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -1273,10 +1625,9 @@ class DescricaoProjetoScreen extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child:
-                  const Icon(Icons.arrow_back, color: Colors.white),
-            ),
+            child: const Icon(Icons.arrow_back, color: Colors.white),
           ),
+        ),
         title: const Text(
           'Sobre o Projeto',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -1466,10 +1817,9 @@ class SobreScreen extends StatelessWidget {
           onTap: () => Navigator.pop(context),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: 
-                  const Icon(Icons.arrow_back, color: Colors.white),
-            ),
+            child: const Icon(Icons.arrow_back, color: Colors.white),
           ),
+        ),
         title: const Text(
           'Sobre Nós',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -2248,7 +2598,7 @@ class _DashboardHomeScreenState extends State<DashboardHomeScreen>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                '🌱 Plantas que precisam de atenção',
+                '🌱 ATENÇÃO ',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
