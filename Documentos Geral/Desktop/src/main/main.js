@@ -166,3 +166,18 @@ ipcMain.handle('deletar-planta', async (e, id) => {
     }
     return db;
 });
+
+ipcMain.on('sair-app', async () => {
+    const respostaDeletar = await dialog.showMessageBox({
+        type: 'warning',
+        title: 'Fechar app',
+        message: `Quer mesmo sair?`,
+        buttons: ['Sim, sair', 'Encerrar Sessão'],
+        defaultId: 1,
+        cancelId: 1
+    });
+    if (respostaDeletar.response === 0) {
+        app.isQuitting = true;
+        app.quit(app.isQuitting);
+    }
+});
