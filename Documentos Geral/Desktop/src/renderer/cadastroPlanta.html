@@ -1,39 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Cadastro de Planta</title>
-    <link rel="stylesheet" href="CSS/style-home.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigia Planta - Nova Planta</title>
+    <link rel="stylesheet" href="CSS/style-cadastroPlantas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/Favicom.png" type="image/png">
 </head>
-
 <body>
     <div class="background-pattern"></div>
+
     <div class="main-wrapper">
-        <header class="top-bar">
-
-
-            <div class="top-actions">
-                <img src="images/LogoSemFundo.png" height="60rem">
-                <button class="notifications-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
-                </button>
-                <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário+S&bold=true&length=2"
-                        alt="Perfil">
-                </div>
-            </div>
-        </header>
-
         <main class="dashboard">
-
-            <div class="cad-planta hidden-card" id="cad-planta">
+            <div class="cad-planta">
                 <div class="hero-card-header">
                     <div class="header-title-section">
                         <i class="fas fa-seedling"></i>
@@ -55,8 +36,7 @@
                         <!-- Coluna da esquerda - Foto -->
                         <div class="form-column photo-column">
                             <div class="photo-upload-wrapper">
-                                <div class="photo-preview" id="photoPreview"
-                                    onclick="document.getElementById('photoInput').click()">
+                                <div class="photo-preview" id="photoPreview">
                                     <div class="preview-placeholder">
                                         <i class="fas fa-cloud-upload-alt"></i>
                                         <span>Foto da planta</span>
@@ -64,12 +44,10 @@
                                     </div>
                                 </div>
 
-                                <input type="file" id="photoInput" class="photo-input" accept="image/*"
-                                    capture="environment" style="display: none;">
+                                <input type="file" id="photoInput" class="photo-input" accept="image/*" style="display: none;">
 
                                 <div class="photo-actions">
-                                    <button type="button" class="camera-photo-btn"
-                                        onclick="document.getElementById('photoInput').click()">
+                                    <button type="button" class="camera-photo-btn" id="escolherImagemBtn">
                                         <i class="fas fa-camera"></i>
                                         <span>Câmera</span>
                                     </button>
@@ -88,8 +66,7 @@
                                     <i class="fas fa-font"></i>
                                     Nome da Planta
                                 </label>
-                                <input type="text" class="input-field" placeholder="Ex: Cronton (Externo)" name="nome"
-                                    required>
+                                <input type="text" class="input-field" placeholder="Ex: Croton (Externo)" name="nome" required>
                                 <span class="input-hint">Dê um nome único para identificar sua planta</span>
                             </div>
 
@@ -126,8 +103,7 @@
                                     <i class="fas fa-map-marker-alt"></i>
                                     Localização
                                 </label>
-                                <input type="text" class="input-field" placeholder="Ex: Sala, Varanda, Jardim"
-                                    name="localizacao">
+                                <input type="text" class="input-field" placeholder="Ex: Sala, Varanda, Jardim" name="localizacao">
                             </div>
 
                             <div class="input-row">
@@ -142,7 +118,6 @@
                         </div>
                     </div>
 
-
                     <!-- Botões de ação -->
                     <div class="form-actions">
                         <button type="button" class="cancel-btn" id="cancelar-btn">
@@ -156,6 +131,9 @@
                     </div>
                 </form>
             </div>
+        </main>
     </div>
+
     <script src="rendererCP.js"></script>
 </body>
+</html>

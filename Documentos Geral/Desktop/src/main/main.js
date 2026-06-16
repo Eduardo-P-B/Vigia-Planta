@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, Tray, dialog } = require('electron');
 const path = require('path');
 const db = require('../../dados.json');
 let janela;
@@ -7,28 +7,76 @@ let tray = null;
 
 const criarJanela = () => {
     janela = new BrowserWindow({
-        width: 800,
-        height: 600,
-        frame: false,
-        fullscreen: true,
+        width: 1920,
+        height: 1080,
+        frame: true,
+        fullscreen: false,
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         },
     });
     janela.loadFile('../renderer/home.html');
     // Abre o painel lateral do desenvolvedor
-    // janela.webContents.openDevTools();
+    janela.webContents.openDevTools();
+};
+
+// Mover a função para fora do app.whenReady()
+const criarMenuPrincipal = (janelaDialog) => {
+    const templateDoMenu = [
+        {
+            label: 'Ações do Sistema',
+            submenu: [
+                { label: 'Sair Imediatamente', role: 'quit', accelerator: 'CmdOrCtrl+Q' }
+            ],
+        },
+        {
+            label: 'Operações',
+            submenu: [
+                {
+                    label: 'Remover Último Produto',
+                    click: async () => {
+                        // 1. Mostra o diálogo de confirmação
+                        const resposta = await dialog.showMessageBox({
+                            type: 'warning',
+                            title: 'Remover Produto',
+                            message: 'Tem certeza que deseja remover o último produto?',
+                            detail: `Vai sumir: "${db[db.length - 1].nome}"`,
+                            buttons: ['Sim, remover', 'Cancelar'],
+                            defaultId: 1,
+                            cancelId: 1
+                        });
+
+                        // 2. Decide com base no índice do botão clicado
+                        if (resposta.response === 0) {
+                            db.pop(); // Remove do array em memória
+                            janela.webContents.send('atualizar-tela');
+                        }
+                    }
+                }
+            ]
+        }
+    ];
+
+    // 2. Transforma a receita em um Menu de verdade
+    const menuReal = Menu.buildFromTemplate(templateDoMenu);
+
+    // 3. Aplica o menu à nossa aplicação inteira!
+    Menu.setApplicationMenu(menuReal);
 };
 
 app.whenReady().then(() => {
     criarJanela();
+
     ipcMain.on('abrir-modal-cadastro', () => {
         janelaModal = new BrowserWindow({
-            width: 1000,
-            height: 600,
+            width: 800,
+            height: 540,
             parent: janela,
             modal: true,
             frame: false,
+            resizable: false,
+            transparent: true,
+            backgroundColor: '#00000000',
             webPreferences: {
                 preload: path.join(__dirname, 'preload.js')
             },
@@ -36,9 +84,8 @@ app.whenReady().then(() => {
         janelaModal.loadFile('../renderer/cadastroPlanta.html')
     });
 
-
     ipcMain.on('fechar', () => {
-        app.quit(); // Comando poderoso do Node/Electron para matar o processo
+        app.quit();
     });
 
     ipcMain.handle('pedir-plantas', () => {
@@ -52,30 +99,13 @@ app.whenReady().then(() => {
     });
 
     ipcMain.handle('salvar', (e, dados) => {
-        // 1. Salva no banco de dados em memória (array)
         db.push(dados);
-
-        // 2. ROTA 2! Devolve a confirmação de sucesso
-        // (O Modal HTML vai receber e acionar o window.close())
+        janela.webContents.send('atualizar-tela');
         return true;
     });
 
-    const templateDoMenu = [
-        {
-            label: 'Ações do Sistema',
-            submenu: [
-                { label: 'Mostrar Aviso', click: () => console.log("Aviso Clicado!") },
-                { type: 'separator' },
-                { label: 'Sair Imediatamente', role: 'quit', accelerator: 'CmdOrCtrl+Q' }
-            ]
-        }
-    ];
-
-    // 2. Transforma a receita em um Menu de verdade
-    const menuReal = Menu.buildFromTemplate(templateDoMenu);
-
-    // 3. Aplica o menu à nossa aplicação inteira!
-    Menu.setApplicationMenu(menuReal);
+    // CHAME a função aqui!
+    criarMenuPrincipal(janela);
 
     // O caminho da imagem que você baixou
     const iconeCaminho = path.join(__dirname, 'images/icone.png');
@@ -90,29 +120,25 @@ app.whenReady().then(() => {
         {
             label: 'Abrir Painel',
             click: () => {
-                // Se a janela estiver escondida, mostre de novo!
                 janela.show();
             }
         },
         { type: 'separator' },
         {
             label: 'Encerrar', click: () => {
-                app.isQuitting = true; // Define uma flag para fechar de vez
+                app.isQuitting = true;
                 app.quit();
             }
         }
-
     ]);
 
-    // 3. Intercepte o fechamento da janela
+    // Intercepte o fechamento da janela
     janela.on('close', (event) => {
         if (!app.isQuitting) {
-            event.preventDefault(); // Impede o fechamento real
-            janela.hide();      // Apenas esconde a janela
+            event.preventDefault();
+            janela.hide();
         }
     });
 
-    // Gruda esse menu no clique com o botão direito do ícone!
     tray.setContextMenu(menuDoTray);
-
 });

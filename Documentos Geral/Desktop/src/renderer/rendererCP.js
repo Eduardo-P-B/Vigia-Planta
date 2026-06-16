@@ -5,8 +5,8 @@ document.querySelector("#cadastro-planta-form").addEventListener("submit", async
     e.preventDefault();
 
     const dados = Object.fromEntries(new FormData(e.target));
-    dados.nivelUmidade = 100
-    dados.nivelLuz = 100
+    dados.nivelUmidade = 100;
+    dados.nivelLuz = 100;
     dados.imagem = null;
 
     if (!dados.imagem){
@@ -22,9 +22,7 @@ document.querySelector("#cadastro-planta-form").addEventListener("submit", async
 
     listaPlantas.push(dados);
 
-    desenharTela(listaPlantas);
+    onAtualizarTela(listaPlantas);
 
 
 });
-
-window.api.abrirModalCadastro();

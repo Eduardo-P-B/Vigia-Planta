@@ -64,6 +64,7 @@ barraBusca.addEventListener("input", () => {
 });
 
 window.api.onAtualizarTela(() => {
+    console.log("Ouvi o chamado do Node!");
     iniciarApp();
 });
 
