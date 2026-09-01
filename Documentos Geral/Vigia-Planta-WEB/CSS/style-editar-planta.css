@@ -1,0 +1,940 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    min-height: 100vh;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8BC34A 0%,
+            #4CAF50 45%,
+            #186d1d 100%
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px 20px;
+
+    position: relative;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================================
+   FUNDO
+========================================================= */
+
+body::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(255,255,255,0.18),
+            transparent 25%
+        ),
+
+        radial-gradient(
+            circle at 90% 80%,
+            rgba(255,255,255,0.12),
+            transparent 30%
+        );
+
+    pointer-events: none;
+}
+
+
+.background-decoration {
+    position: fixed;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.08);
+
+    pointer-events: none;
+
+    filter: blur(1px);
+}
+
+.decoration-1 {
+    width: 300px;
+    height: 300px;
+
+    top: -150px;
+    left: -100px;
+}
+
+.decoration-2 {
+    width: 400px;
+    height: 400px;
+
+    bottom: -220px;
+    right: -150px;
+}
+
+.decoration-3 {
+    width: 120px;
+    height: 120px;
+
+    top: 20%;
+    right: 8%;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.page-container {
+
+    width: 100%;
+
+    max-width: 650px;
+
+    position: relative;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.edit-card {
+
+    background: rgba(241, 245, 236, 0.96);
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    border-radius: 30px;
+
+    padding: 38px;
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.20);
+
+    border: 1px solid rgba(255,255,255,0.5);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+.edit-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8BC34A,
+            #4CAF50,
+            #186d1d
+        );
+}
+
+.edit-card:hover {
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.edit-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-bottom: 32px;
+}
+
+
+.header-icon {
+
+    width: 70px;
+    height: 70px;
+
+    flex-shrink: 0;
+
+    border-radius: 20px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4CAF50,
+            #186d1d
+        );
+
+    color: white;
+
+    font-size: 31px;
+
+    box-shadow:
+        0 10px 25px rgba(76,175,80,0.25);
+}
+
+
+.header-text {
+
+    min-width: 0;
+}
+
+
+.header-label {
+
+    display: block;
+
+    color: #4CAF50;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    margin-bottom: 4px;
+}
+
+
+.header-text h1 {
+
+    color: #263328;
+
+    font-size: 29px;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    margin-bottom: 5px;
+}
+
+
+.header-text p {
+
+    color: #727972;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   MENSAGENS
+========================================================= */
+
+.message {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    border-radius: 14px;
+
+    margin-bottom: 22px;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+.message i {
+
+    font-size: 18px;
+
+    margin-top: 1px;
+
+    flex-shrink: 0;
+}
+
+
+.error-message {
+
+    background: #fff1f1;
+
+    color: #b42318;
+
+    border: 1px solid #ffcaca;
+}
+
+
+.error-message i {
+
+    color: #e53935;
+}
+
+
+.success-message {
+
+    background: #edf9ef;
+
+    color: #24732d;
+
+    border: 1px solid #bde5c3;
+}
+
+
+.success-message i {
+
+    color: #4CAF50;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+========================================================= */
+
+.form-content {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+.input-group {
+
+    width: 100%;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.input-label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 9px;
+
+    color: #303830;
+
+    font-weight: 700;
+
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+
+.input-label small {
+
+    display: block;
+
+    color: #899089;
+
+    font-size: 10px;
+
+    font-weight: 400;
+
+    margin-top: 2px;
+}
+
+
+.label-icon {
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    background: #e5f2e2;
+
+    color: #4CAF50;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.input-field {
+
+    width: 100%;
+
+    padding: 14px 16px;
+
+    border: 2px solid #dfe5df;
+
+    border-radius: 13px;
+
+    font-size: 15px;
+
+    font-family: inherit;
+
+    color: #303830;
+
+    background: #fff;
+
+    outline: none;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.input-field::placeholder {
+
+    color: #a4aaa4;
+}
+
+
+.input-field:hover {
+
+    border-color: #b9cdb9;
+}
+
+
+.input-field:focus {
+
+    border-color: #4CAF50;
+
+    box-shadow:
+        0 0 0 4px rgba(76,175,80,0.10);
+}
+
+
+/* =========================================================
+   SELECT
+========================================================= */
+
+.select-wrapper {
+
+    position: relative;
+
+    width: 100%;
+}
+
+
+.select-field {
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    cursor: pointer;
+
+    padding-right: 48px;
+}
+
+
+.select-arrow {
+
+    position: absolute;
+
+    right: 17px;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #899089;
+
+    font-size: 13px;
+
+    pointer-events: none;
+
+    transition: color 0.25s ease;
+}
+
+
+.select-wrapper:hover .select-arrow {
+
+    color: #4CAF50;
+}
+
+
+.select-field:focus + .select-arrow {
+
+    color: #4CAF50;
+}
+
+
+.select-field option {
+
+    background: white;
+
+    color: #303830;
+
+    padding: 10px;
+}
+
+
+/* =========================================================
+   DATA
+========================================================= */
+
+input[type="date"] {
+
+    color: #303830;
+
+    cursor: pointer;
+}
+
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+
+    cursor: pointer;
+
+    opacity: 0.6;
+
+    transition: opacity 0.2s ease;
+}
+
+
+input[type="date"]:hover::-webkit-calendar-picker-indicator {
+
+    opacity: 1;
+}
+
+
+/* =========================================================
+   BOTÕES
+========================================================= */
+
+.form-actions {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1.5fr;
+
+    gap: 12px;
+
+    margin-top: 30px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid #e1e6e1;
+}
+
+
+.cancel-btn,
+.submit-plant-btn {
+
+    min-height: 52px;
+
+    border-radius: 13px;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+
+    text-decoration: none;
+}
+
+
+/* Cancelar */
+
+.cancel-btn {
+
+    background: #ffffff;
+
+    color: #586158;
+
+    border: 2px solid #dfe5df;
+}
+
+
+.cancel-btn:hover {
+
+    background: #f5f7f5;
+
+    border-color: #c8d1c8;
+
+    transform: translateY(-2px);
+}
+
+
+/* Salvar */
+
+.submit-plant-btn {
+
+    border: none;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4CAF50,
+            #186d1d
+        );
+
+    box-shadow:
+        0 8px 18px rgba(76,175,80,0.25);
+}
+
+
+.submit-plant-btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 25px rgba(76,175,80,0.35);
+}
+
+
+.submit-plant-btn:active,
+.cancel-btn:active {
+
+    transform: translateY(0);
+}
+
+
+.submit-plant-btn i {
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   RODAPÉ
+========================================================= */
+
+.page-footer {
+
+    text-align: center;
+
+    color: rgba(255,255,255,0.85);
+
+    font-size: 12px;
+
+    margin-top: 20px;
+
+    font-weight: 500;
+}
+
+
+.page-footer i {
+
+    margin-right: 5px;
+
+    color: #d8f5c9;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    body {
+
+        padding: 25px 15px;
+
+        align-items: flex-start;
+    }
+
+
+    .page-container {
+
+        margin-top: 10px;
+    }
+
+
+    .edit-card {
+
+        padding: 30px 24px;
+
+        border-radius: 25px;
+    }
+
+
+    .edit-header {
+
+        margin-bottom: 27px;
+    }
+
+
+    .header-icon {
+
+        width: 60px;
+        height: 60px;
+
+        border-radius: 17px;
+
+        font-size: 26px;
+    }
+
+
+    .header-text h1 {
+
+        font-size: 25px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    body {
+
+        padding: 15px 10px;
+    }
+
+
+    .edit-card {
+
+        padding: 27px 20px;
+
+        border-radius: 22px;
+    }
+
+
+    .edit-header {
+
+        align-items: flex-start;
+
+        gap: 13px;
+    }
+
+
+    .header-icon {
+
+        width: 52px;
+        height: 52px;
+
+        border-radius: 15px;
+
+        font-size: 22px;
+    }
+
+
+    .header-label {
+
+        font-size: 9px;
+    }
+
+
+    .header-text h1 {
+
+        font-size: 22px;
+    }
+
+
+    .header-text p {
+
+        font-size: 12px;
+    }
+
+
+    .form-content {
+
+        gap: 19px;
+    }
+
+
+    .input-field {
+
+        padding: 13px 14px;
+
+        font-size: 14px;
+    }
+
+
+    .form-actions {
+
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .submit-plant-btn,
+    .cancel-btn {
+
+        width: 100%;
+    }
+
+
+    .page-footer {
+
+        font-size: 11px;
+    }
+
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    body {
+
+        background:
+            linear-gradient(
+                135deg,
+                #315d32,
+                #183c1d
+            );
+    }
+
+
+    .edit-card {
+
+        background: rgba(30, 36, 31, 0.97);
+
+        border-color: rgba(255,255,255,0.08);
+    }
+
+
+    .header-text h1 {
+
+        color: #f0f5f0;
+    }
+
+
+    .header-text p {
+
+        color: #aab3aa;
+    }
+
+
+    .input-label {
+
+        color: #e2e9e2;
+    }
+
+
+    .input-label small {
+
+        color: #899289;
+    }
+
+
+    .label-icon {
+
+        background: rgba(76,175,80,0.15);
+    }
+
+
+    .input-field {
+
+        background: #252b26;
+
+        color: #f0f5f0;
+
+        border-color: #3c453d;
+    }
+
+
+    .input-field::placeholder {
+
+        color: #727b73;
+    }
+
+
+    .select-field option {
+
+        background: #252b26;
+
+        color: white;
+    }
+
+
+    .cancel-btn {
+
+        background: #252b26;
+
+        color: #dce4dc;
+
+        border-color: #3c453d;
+    }
+
+
+    .cancel-btn:hover {
+
+        background: #303830;
+    }
+
+
+    .form-actions {
+
+        border-top-color: #384038;
+    }
+
+}

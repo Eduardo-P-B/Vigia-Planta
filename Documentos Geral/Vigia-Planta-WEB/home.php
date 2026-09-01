@@ -2,32 +2,28 @@
 
 
     require "dependencias/config.php";
-
+    require "dependencias/sessao.php";
     
 
-        $id = $_SESSION["idUser"];
+        $id = $_SESSION['idUser'];
 
-        $sql = "SELECT nome FROM user WHERE id = ?";
+        $sql = "SELECT nome FROM user WHERE id = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
 
-        $resultado = $stmt->get_result();
-
-        $usuario = $resultado->fetch_assoc();
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $nomeU = $usuario["nome"];
 
-        $sql = "SELECT * FROM planta WHERE userId = ?";
+        $sql = "SELECT * FROM planta WHERE userId = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
 
-        $resultado = $stmt->get_result();
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $linhas = $resultado->num_rows;
-
-    
+        $linhas = count($resultados);
 
 ?>
 

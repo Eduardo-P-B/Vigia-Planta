@@ -1,8 +1,8 @@
 <?php
 
 
-
-    require "dependencias/config.php";
+  require "dependencias/sessao.php";
+  require "dependencias/config.php";
 
 ?>
 

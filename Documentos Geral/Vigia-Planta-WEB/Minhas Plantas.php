@@ -1,21 +1,17 @@
 <?php
 
-
-
     require "dependencias/config.php";
-
+    require "dependencias/sessao.php";
     
 
         $id = $_SESSION["idUser"];
 
-        $sql = "SELECT nome FROM user WHERE id = ?";
+        $sql = "SELECT nome FROM user WHERE id = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id);
+        $stmt->bindParam(":id", $id);
         $stmt->execute();
 
-        $resultado = $stmt->get_result();
-
-        $usuario = $resultado->fetch_assoc();
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
         $nomeU = $usuario["nome"];
 
@@ -65,12 +61,25 @@
     // PROCESSAMENTO
             if ($erro == "") {
 
-               $sql = "INSERT INTO planta (nome, especie, localizacao, dataPlantio, foto, umidade, luz, userId) VALUES ('$nomeP', '$especie', '$local', '$data', '$foto', '$umidade', '$luz', '$id')";
+               $sql = "INSERT INTO planta 
+        (nome, especie, localizacao, dataPlantio, foto, umidade, luz, userId) 
+        VALUES (:nome, :especie, :localizacao, :dataPlantio, :foto, :umidade, :luz, :userId)";
 
-                /*$stmt*/
-                $executaQuery = $conn->query($sql);
+                $stmt = $conn->prepare($sql);
 
-                if ($executaQuery) {
+                $stmt->bindParam(":nome", $nomeP);
+                $stmt->bindParam(":especie", $especie);
+                $stmt->bindParam(":localizacao", $local);
+                $stmt->bindParam(":dataPlantio", $data);
+                $stmt->bindParam(":foto", $foto);
+                $stmt->bindParam(":umidade", $umidade);
+                $stmt->bindParam(":luz", $luz);
+                $stmt->bindParam(":userId", $id);
+
+                $stmt->execute();
+
+
+                if ($stmt) {
                     $sucesso = "Usuário cadastrado com sucesso!";
                    //limpar os campos
                     $nomeP = "";
@@ -181,14 +190,12 @@
 
                     <?php
 
-                    $sql = "SELECT * FROM planta WHERE userId = ?";
+                    $sql = "SELECT * FROM planta WHERE userId = :id";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $id);
+                    $stmt->bindParam(":id", $id);
                     $stmt->execute();
 
-                    $resultado = $stmt->get_result();
-
-                        while ($linha = $resultado->fetch_assoc()){
+                        while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)){
 
                         //<div class="plant-item urgent">
                         //<div class="plant-item warning">
@@ -270,7 +277,7 @@
                                     Nome da Planta
                                 </label>
                                 <input type="text" class="input-field" placeholder="Ex: Cronton (Externo)" required name="nomeP">
-                                <span class="input-hint">Dê um nome <b>único</b> para identificar sua planta</span>
+                                <span class="input-hint">Dê um nome para identificar sua planta</span>
                             </div>
 
                             <div class="input-group">

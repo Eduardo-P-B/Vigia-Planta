@@ -1,9 +1,8 @@
 <?php
 
-
-
     require "dependencias/config.php";
 
+    session_start();
 
     $erro = "";
     $sucesso = "";
@@ -21,37 +20,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $erro = "Preencha os campos<br>";
     }else {
 
-    $sql = "SELECT * FROM user WHERE email = ?";
+        $sql = "SELECT * FROM user WHERE email = :email";
 
-    $stmt = $conn->prepare($sql);
+        $stmt = $conn->prepare($sql);
 
-    $stmt->bind_param("s", $email);
+        $stmt->bindParam(":email", $email);
 
-    $stmt->execute();
+        $stmt->execute();
 
 
-    $resultado = $stmt->get_result();
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($resultado->num_rows == 1) {
-        $usuario = $resultado->fetch_assoc();
-
-        if ($senha != $usuario['senha']) {
-        $erro = "E-mail ou senha invalidos";
-        }else {
+        if ($email && password_verify($senha, $usuario['senha'])) {      
     
-        $_SESSION['idUser'] = $usuario["id"];
+            $_SESSION['idUser'] = $usuario['id'];
 
-        if ($_SESSION['idUser'] != "")
-        {
-        header("Location: home.php");
-        exit;
+            header("Location: home.php");
+            exit();
+
+            } else {
+
+            $erro = "E-mail ou senha invalidos";
+            
         }
-        }
-    } else {
-        $erro = "E-mail ou senha invalidos";
+
     }
 
-}
 }
 
 

@@ -1,7 +1,7 @@
 <?php
 
 require "dependencias/config.php";
-require "dependencias/sessao.php";
+
 
 $erro = "";
 $sucesso = "";
@@ -25,12 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        
     } else {
         $erro .= "O e-mail deve ser valido<br>";
     }
 
-    if (strlen($senha1) < 8 ) {
+    if (strlen($senha1) < 8) {
         $erro .= "A senha deve ter mais de 8 caracteres<br>";
     }
 
@@ -41,25 +40,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // PROCESSAMENTO
     if ($erro == "") {
 
-        $sql = "INSERT INTO user (nome, email, senha) VALUES ('$nome', '$email', '$senha1')";
+        $sql = "INSERT INTO user (nome, email, senha) 
+        VALUES (:nome, :email, :senha)";
 
-        /*$stmt*/
-        $executaQuery = $conn->query($sql);
+        $stmt = $conn->prepare($sql);
 
-        if ($executaQuery) {
+        $senhaHash = password_hash($senha1, PASSWORD_DEFAULT);
+
+        $stmt->bindParam(":nome", $nome);
+        $stmt->bindParam(":email", $email);
+        $stmt->bindParam(":senha", $senhaHash);
+
+        try {
+
+            $stmt->execute();
+
             $sucesso = "Usuário cadastrado com sucesso!";
-            //limpar os campos
-            $nome = "";
-            $email = "";
-            $senha1 = "";
-            $senha2 = "";
+        } catch (PDOException $e) {
 
-            header("Location: login.php");
-            exit;
-
-        } else {
-            $erro = "Erro ao cadastrar usuario";
+            if ($e->errorInfo[1] == 1062) {
+                $erro = "Este e-mail já está cadastrado!";
+            } else {
+                $erro = "Erro ao cadastrar usuário.";
+            }
         }
+
     }
 }
 
@@ -67,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -76,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
 </head>
+
 <body>
     <div class="container">
         <div class="login-card">
@@ -131,14 +138,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                 </div>
 
-<?php
-    if ($erro != "") {
-        echo "<div style='color: red; border: 1px solid red; padding: 10px;'> $erro </div>";
-    }
-    if ($sucesso != "") {
-        echo "<div style='color: green; border: 1px solid green; padding: 10px;'> $sucesso </div>";
-    }
-?>
+                <?php
+                if ($erro != "") {
+                    echo "<div style='color: red; border: 1px solid red; padding: 10px;'> $erro </div>";
+                }
+                if ($sucesso != "") {
+                    echo "<div style='color: green; border: 1px solid green; padding: 10px;'> $sucesso </div>";
+                }
+                ?>
 
                 <button type="submit" class="login-btn">
                     <i class="fas fa-sign-in-alt"></i>
@@ -158,11 +165,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </div>
 
-    
+
 
     <script>
-
-
         let senha1 = document.querySelector("#senha1");
         const btnsenha1 = document.querySelector("#btnsenha1");
 
@@ -184,8 +189,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 senha2.type = "password";
             }
         });
-
     </script>
 
 </body>
+
 </html>

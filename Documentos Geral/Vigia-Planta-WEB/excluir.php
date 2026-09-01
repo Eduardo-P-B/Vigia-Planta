@@ -1,6 +1,6 @@
 <?php 
-require "dependencias/config.php";
-
+    require "dependencias/config.php";
+    require "dependencias/sessao.php";
 
 
 
@@ -8,13 +8,19 @@ require "dependencias/config.php";
 
     $nomeP = $_GET['nomeP'];
 
-$idP = $_GET['idP'];
+    $idP = $_GET['idP'];
 
-$sql = "DELETE FROM planta where userId = '$id' and id = '$idP'";
+    $sql = "DELETE FROM planta WHERE userId = :id AND id = :idP";
 
-$conn->query($sql);
+    $stmt = $conn->prepare($sql);
 
-header("Location: Minhas Plantas.php");
-exit;
+    $stmt->bindParam(":id", $id);
+    $stmt->bindParam(":idP", $idP);
+
+    $stmt->execute();
+
+
+    header("Location: Minhas Plantas.php");
+    exit;
     
 ?>
