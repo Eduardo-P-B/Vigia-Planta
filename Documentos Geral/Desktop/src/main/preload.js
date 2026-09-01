@@ -29,6 +29,8 @@ contextBridge.exposeInMainWorld('api', {
         return ipcRenderer.invoke('deletar-planta', id);
     },
 
-    sairApp: () => ipcRenderer.send('sair-app')
+    sairApp: () => ipcRenderer.send('sair-app'),
+
+    criarPlanta1: (planta1) => ipcRenderer.invoke('planta:criar', planta1),
     
 });

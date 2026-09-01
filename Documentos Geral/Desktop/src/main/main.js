@@ -1,13 +1,43 @@
+// npm install mysql2 npm install electron -- save - dev
+
 const { app, BrowserWindow, ipcMain, Menu, Tray, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const caminhoDB = path.join(__dirname, '../../dados.json');
+const conexao = require('./conexao');
 let db = JSON.parse(
     fs.readFileSync(caminhoDB, 'utf-8')
 );
 let janela;
 let janelaModal;
 let tray = null;
+
+const abrirModalPlanta = (janelaPrincipal) =>    {
+
+    const janelaModal = new BrowserWindow({
+
+        width: 500, height: 670,
+        parent: janelaPrincipal, modal: true,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js')
+        }
+
+    })
+
+    janelaModal.removeMenu();
+    janelaModal.loadFile(path.join(__dirname, '../renderer/cadastroPlanta.html'))
+}
+
+ipcMain.handle('planta:criar', (evento, planta1) => {
+
+    return new Promise((resolve, reject) => {
+
+        const sql = 'INSERT INTO planta (nome, especie, localizacao, dataPlantio, foto, umidade, luz, userId, temp) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ? )';
+
+        conexao.query(sql, [planta1.nome])
+    })
+
+})
 
 const criarJanela = () => {
     janela = new BrowserWindow({
