@@ -1,12 +1,8 @@
 <?php 
-require "config.php";
+require "dependencias/config.php";
 
-session_start();
 
-if ($_SESSION['idUser'] == ""){
-        header("Location: login.php");
-        exit;
-    }else{
+
 
     $id = $_SESSION["idUser"];
 
@@ -20,5 +16,5 @@ $conn->query($sql);
 
 header("Location: Minhas Plantas.php");
 exit;
-    }
+    
 ?>

@@ -1,16 +1,10 @@
 <?php
 
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
 
-    session_start(); 
 
-    require "config.php";
+    require "dependencias/config.php";
 
-    if ($_SESSION['idUser'] == ""){
-        header("Location: login.php");
-        exit;
-    }else{
+    
 
         $id = $_SESSION["idUser"];
 
@@ -90,7 +84,7 @@
                 }
             }
         }
-    }
+    
 ?>
 
 <!DOCTYPE html>

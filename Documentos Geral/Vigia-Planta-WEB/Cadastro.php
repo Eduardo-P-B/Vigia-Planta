@@ -1,6 +1,7 @@
 <?php
 
-require "config.php";
+require "dependencias/config.php";
+require "dependencias/sessao.php";
 
 $erro = "";
 $sucesso = "";

@@ -1,8 +1,8 @@
 <?php
 
-session_start(); 
 
-    require "config.php";
+
+    require "dependencias/config.php";
 
 ?>
 

@@ -1,14 +1,9 @@
 <?php
 
-    session_start(); 
 
-    require "config.php"; 
 
-    if ($_SESSION['idUser'] != "")
-        {
-        header("Location: home.php");
-        exit;
-        }
+    require "dependencias/config.php";
+
 
     $erro = "";
     $sucesso = "";
