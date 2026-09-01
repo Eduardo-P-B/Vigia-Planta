@@ -1,34 +1,62 @@
 <?php
 
 
-    require "dependencias/config.php";
-    require "dependencias/sessao.php";
-    
+require "dependencias/config.php";
+require "dependencias/sessao.php";
 
-        $id = $_SESSION['idUser'];
 
-        $sql = "SELECT nome FROM user WHERE id = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
+$id = $_SESSION['idUser'];
 
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$sql = "SELECT nome FROM user WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
 
-        $nomeU = $usuario["nome"];
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $sql = "SELECT * FROM planta WHERE userId = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
+$nomeU = $usuario["nome"];
 
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT * FROM planta WHERE userId = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
 
-        $linhas = count($resultados);
+$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$linhas = count($resultados);
+
+$sql = "SELECT * FROM planta WHERE userId = :id and luz < 50";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
+
+$plantas1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$luz = count($plantas1);
+
+$sql = "SELECT * FROM planta WHERE userId = :id and umidade < 50";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
+
+$plantas2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$agua = count($plantas2);
+
+$sql = "SELECT * FROM planta WHERE userId = :id and temp not between 20 and 30 ";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
+
+$plantas3 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$temp = count($plantas3);
 
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -38,9 +66,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
 </head>
+
 <body>
     <div class="background-pattern"></div>
-    
+
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -76,7 +105,7 @@
             <div class="user-info-sidebar">
                 <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
                 <div>
-                    <p><?=$nomeU?></p>
+                    <p><?= $nomeU ?></p>
                 </div>
             </div>
         </div>
@@ -108,7 +137,7 @@
             <!-- Hero Section -->
             <div class="hero-card">
                 <div class="hero-content">
-                    <h1>Olá, <?=$nomeU?>! 🌿</h1>
+                    <h1>Olá, <?= $nomeU ?>! 🌿</h1>
                 </div>
                 <div class="metrics-grid">
                     <div class="metric-card">
@@ -116,7 +145,7 @@
                             <i class="fas fa-leaf"></i>
                         </div>
                         <div class="metric-info">
-                            <h3><?= $linhas?></h3>
+                            <h3><?= $linhas ?></h3>
                             <p>Plantas no total</p>
                         </div>
                     </div>
@@ -125,7 +154,7 @@
                             <i class="fas fa-tint"></i>
                         </div>
                         <div class="metric-info">
-                            <h3>0</h3>
+                            <h3><?= $agua ?></h3>
                             <p>Precisam de água</p>
                         </div>
                     </div>
@@ -134,8 +163,8 @@
                             <i class="fas fa-sun"></i>
                         </div>
                         <div class="metric-info">
-                            <h3>70%</h3>
-                            <p>Nível de luz solar média</p>
+                            <h3><?= $luz ?></h3>
+                            <p>Precisam de luz solar</p>
                         </div>
                     </div>
                     <div class="metric-card">
@@ -143,8 +172,8 @@
                             <i class="fas fa-calendar-week"></i>
                         </div>
                         <div class="metric-info">
-                            <h3>0</h3>
-                            <p>Tarefas hoje</p>
+                            <h3><?= $temp ?></h3>
+                            <p>Não estão em uma temperatura adequada</p>
                         </div>
                     </div>
                 </div>
@@ -157,68 +186,69 @@
                     <a href="Minhas Plantas.php" class="view-all">Ver todas <i class="fas fa-arrow-right"></i></a>
                 </div>
                 <div class="plants-carousel">
-                    <!-- <div class="plant-item urgent">
-                        <div class="plant-preview">
-                            <img src="images/podocarpo.jpg">
-                            <div class="plant-overlay">
-                            </div>
-                        </div>
-                        <h4>Podo Carpus (Externo)</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 20%"></div>
-                        </div>
-                    </div>
-                     <div class="plant-item warning">
-                        <div class="plant-preview">
-                            <img src="images/podocarpo2.jpg">
-                        </div>
-                        <h4>Podo Carpus (Interno)</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 45%"></div>
-                        </div>
-                    </div>
-                    <div class="plant-item">
-                        <div class="plant-preview">
-                            <img src="images/croton.jpg">
-                        </div>
-                        <h4>Croton</h4>
-                        <p>Nível de Umidade:</p>
-                        <div class="progress-bar">
-                            <div class="water-progress" style="width: 60%"></div>
-                        </div>
-                    </div> -->
-                    
+                    <?php
+
+                    $sql = "SELECT * FROM planta WHERE userId = :id order by LEAST(umidade, luz) ASC";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindParam(":id", $id);
+                    $stmt->execute();
+
+                    while ($linhas = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                        //<div class="plant-item urgent">
+                        //<div class="plant-item warning">
+
+                        echo "<div class='plant-item'>";
+                        echo "<div class='plant-preview'>";
+                        echo "<img src=' " . $linhas['foto'] . " '><br>";
+                        echo "</div>";
+                        echo "<h4>" . $linhas['nome'] . "</h4>";
+                        echo "<p>Nível de Umidade:</p>";
+                        echo "<div class='progress-bar'>";
+                        echo "<div class='water-progress' style='width: " . $linhas['umidade'] . "%'></div>";
+                        echo "</div>";
+                        echo "<p>Nível de luz Solar</p>";
+                        echo "<div class='progress-bar'>";
+                        echo "<div class='sun-progress' style='width: " . $linhas['luz'] . "%'></div>";
+                        echo "</div>";
+
+
+
+                        echo "</div>";
+                    };
+
+                    ?>
+
                 </div>
             </div>
 
             <!-- Insights e Recomendações -->
-            
 
 
 
-    <script>
-        // Menu toggle para mobile
-        const menuToggle = document.getElementById('menuToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-        }
+            <script>
+                // Menu toggle para mobile
+                const menuToggle = document.getElementById('menuToggle');
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
 
-        menuToggle.addEventListener('click', toggleSidebar);
-        overlay.addEventListener('click', toggleSidebar);
+                function toggleSidebar() {
+                    sidebar.classList.toggle('active');
+                    overlay.classList.toggle('active');
+                    document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+                }
 
-        // Fechar ao pressionar ESC
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-                toggleSidebar();
-            }
-        });
-    </script>
+                menuToggle.addEventListener('click', toggleSidebar);
+                overlay.addEventListener('click', toggleSidebar);
+
+                // Fechar ao pressionar ESC
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                        toggleSidebar();
+                    }
+                });
+            </script>
 </body>
+
 </html>

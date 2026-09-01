@@ -1,103 +1,103 @@
 <?php
 
-    require "dependencias/config.php";
-    require "dependencias/sessao.php";
-    
+require "dependencias/config.php";
+require "dependencias/sessao.php";
 
-        $id = $_SESSION["idUser"];
 
-        $sql = "SELECT nome FROM user WHERE id = :id";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
+$id = $_SESSION["idUser"];
 
-        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+$sql = "SELECT nome FROM user WHERE id = :id";
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":id", $id);
+$stmt->execute();
 
-        $nomeU = $usuario["nome"];
+$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $erro = "";
-        $sucesso = "";
+$nomeU = $usuario["nome"];
 
-        $nomeP = "";
-        $data = "";
-        $local = "";
-        $especie = "";
-        $umidade = 67;
-        $luz = 69;
+$erro = "";
+$sucesso = "";
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+$nomeP = "";
+$data = "";
+$local = "";
+$especie = "";
+$umidade = 67;
+$luz = 69;
 
-            $nomeP = trim($_POST['nomeP']);
-            $data = $_POST['data'];
-            $local = trim($_POST['local']);
-            $especie = $_POST['especie'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $nomeArquivo = time() . "_" . $_FILES["foto"]["name"];
-            $arquivoTemp = $_FILES["foto"]["tmp_name"];
+    $nomeP = trim($_POST['nomeP']);
+    $data = $_POST['data'];
+    $local = trim($_POST['local']);
+    $especie = $_POST['especie'];
 
-            $foto = "images/" . $nomeArquivo;
+    $nomeArquivo = time() . "_" . $_FILES["foto"]["name"];
+    $arquivoTemp = $_FILES["foto"]["tmp_name"];
 
-            move_uploaded_file($arquivoTemp, $foto);
+    $foto = "images/" . $nomeArquivo;
 
-            
+    move_uploaded_file($arquivoTemp, $foto);
+
+
 
     // VALIDAÇÃO
-            if (empty($nomeP)) {
-                $erro .= "O nome da planta é obrigatório<br>";
-            }
-            if (empty($data)) {
-                $erro .= "A data do plantio da planta é obrigatória<br>";
-            }
-            if (empty($local)) {
-                $erro .= "O local da planta é obrigatório<br>";
-            }
-         if (empty($especie)) {
-                $erro .= "A especie da planta é obrigatória<br>";
-            }
-            if (empty($foto)) {
-                $erro .= "Uma foto da planta é obrigatória<br>";
-            }
+    if (empty($nomeP)) {
+        $erro .= "O nome da planta é obrigatório<br>";
+    }
+    if (empty($data)) {
+        $erro .= "A data do plantio da planta é obrigatória<br>";
+    }
+    if (empty($local)) {
+        $erro .= "O local da planta é obrigatório<br>";
+    }
+    if (empty($especie)) {
+        $erro .= "A especie da planta é obrigatória<br>";
+    }
+    if (empty($foto)) {
+        $erro .= "Uma foto da planta é obrigatória<br>";
+    }
 
     // PROCESSAMENTO
-            if ($erro == "") {
+    if ($erro == "") {
 
-               $sql = "INSERT INTO planta 
+        $sql = "INSERT INTO planta 
         (nome, especie, localizacao, dataPlantio, foto, umidade, luz, userId) 
         VALUES (:nome, :especie, :localizacao, :dataPlantio, :foto, :umidade, :luz, :userId)";
 
-                $stmt = $conn->prepare($sql);
+        $stmt = $conn->prepare($sql);
 
-                $stmt->bindParam(":nome", $nomeP);
-                $stmt->bindParam(":especie", $especie);
-                $stmt->bindParam(":localizacao", $local);
-                $stmt->bindParam(":dataPlantio", $data);
-                $stmt->bindParam(":foto", $foto);
-                $stmt->bindParam(":umidade", $umidade);
-                $stmt->bindParam(":luz", $luz);
-                $stmt->bindParam(":userId", $id);
+        $stmt->bindParam(":nome", $nomeP);
+        $stmt->bindParam(":especie", $especie);
+        $stmt->bindParam(":localizacao", $local);
+        $stmt->bindParam(":dataPlantio", $data);
+        $stmt->bindParam(":foto", $foto);
+        $stmt->bindParam(":umidade", $umidade);
+        $stmt->bindParam(":luz", $luz);
+        $stmt->bindParam(":userId", $id);
 
-                $stmt->execute();
+        $stmt->execute();
 
 
-                if ($stmt) {
-                    $sucesso = "Usuário cadastrado com sucesso!";
-                   //limpar os campos
-                    $nomeP = "";
-                    $especie = "";
-                    $local = "";
-                    $data = "";
-                    $foto = "";
-
-               } else {
-               $erro = "Erro ao cadastrar usuario";
-                }
-            }
+        if ($stmt) {
+            $sucesso = "Usuário cadastrado com sucesso!";
+            //limpar os campos
+            $nomeP = "";
+            $especie = "";
+            $local = "";
+            $data = "";
+            $foto = "";
+        } else {
+            $erro = "Erro ao cadastrar usuario";
         }
-    
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -107,9 +107,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
 </head>
+
 <body>
     <div class="background-pattern"></div>
-    
+
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -142,7 +143,7 @@
             <div class="user-info-sidebar">
                 <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
                 <div>
-                    <p><?=$nomeU?></p>
+                    <p><?= $nomeU ?></p>
                 </div>
             </div>
         </div>
@@ -172,7 +173,7 @@
 
         <main class="dashboard">
             <!-- Hero Section -->
-            <div  class="hero-card" id="hero-card">
+            <div class="hero-card" id="hero-card">
                 <div class="hero-card-header">
                     <h1>Suas Plantas 🍂:</h1>
                     <div class="hero-card-header-btns">
@@ -190,39 +191,59 @@
 
                     <?php
 
-                    $sql = "SELECT * FROM planta WHERE userId = :id";
+                    $sql = "SELECT * FROM planta WHERE userId = :id order by LEAST(umidade, luz) ASC";
                     $stmt = $conn->prepare($sql);
                     $stmt->bindParam(":id", $id);
                     $stmt->execute();
 
-                        while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)){
+                    while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+                        $temp = $linha['temp'];
+
+                        if ($temp > 30) {
+                            $diferenca = $temp - 30;
+                            $comentarioTemp = $diferenca . "°C acima da temperatura ideal";
+                            $classeTemp = "temp-quente";
+                        } elseif ($temp < 20) {
+                            $diferenca = 20 - $temp;
+                            $comentarioTemp = $diferenca . "°C abaixo da temperatura ideal";
+                            $classeTemp = "temp-fria";
+                        } else {
+                            $comentarioTemp = "Temperatura ideal";
+                            $classeTemp = "temp-ideal";
+                        }
 
                         //<div class="plant-item urgent">
                         //<div class="plant-item warning">
 
-                            echo "<div class='plant-item'>";
-                                echo "<div class='plant-preview'>";
-                                    echo "<img src=' " . $linha['foto'] . " '<br>>";
-                                echo "</div>";
-                                echo "<h4>" . $linha['nome'] . "</h4>";
-                                echo "<p>Nível de Umidade:</p>";
-                                echo "<div class='progress-bar'>";
-                                  echo "<div class='water-progress' style='width: " . $linha['umidade'] . "%'></div>";
-                                echo "</div>";
-                                    echo "<p>Nível de luz Solar</p>";
-                                echo "<div class='progress-bar'>";
-                                   echo "<div class='sun-progress' style='width: " . $linha['luz'] . "%'></div>";
-                                echo "</div>";
-                                echo "<div class='plant-actions'>";
+                        echo "<div class='plant-item'>";
+                        echo "<div class='plant-preview'>";
+                        echo "<img src=' " . $linha['foto'] . " '><br>";
+                        echo "</div>";
+                        echo "<h4>" . $linha['nome'] . "</h4>";
+                        echo "<p>Nível de Umidade:</p>";
+                        echo "<div class='progress-bar'>";
+                        echo "<div class='water-progress' style='width: " . $linha['umidade'] . "%'></div>";
+                        echo "</div>";
+                        echo "<p>Nível de luz Solar</p>";
+                        echo "<div class='progress-bar'>";
+                        echo "<div class='sun-progress' style='width: " . $linha['luz'] . "%'></div>";
+                        echo "</div>";
 
-                                echo "<a class='btn-edit' href='editar.php?idP=" . $linha['id'] . "'> ✏️ Editar </a>";
+                        echo "<div class='temperature-display'>";
+                        echo "<span>" . $temp . "°C</span>";
+                        echo "<small class='$classeTemp'>$comentarioTemp</small>";
+                        echo "</div>";
 
-                                echo "<a class='btn-delete' href='excluir.php?idP=" . $linha['id'] . "' onclick='return confirm(\"Tem certeza que deseja excluir esta planta?\")'>🗑️ Excluir </a>";
+                        echo "<div class='plant-actions'>";
 
-                                echo "</div>";
-                                echo "</div>";
+                        echo "<a class='btn-edit' href='editar.php?idP=" . $linha['id'] . "'> ✏️ Editar </a>";
 
-                        };
+                        echo "<a class='btn-delete' href='excluir.php?idP=" . $linha['id'] . "' onclick='return confirm(\"Tem certeza que deseja excluir esta planta?\")'>🗑️ Excluir </a>";
+
+                        echo "</div>";
+                        echo "</div>";
+                    };
 
                     ?>
                 </div>
@@ -244,7 +265,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <form id="cadastro-planta-form" method="POST" enctype="multipart/form-data">
                     <div class="form-two-columns">
                         <!-- Coluna da esquerda - Foto -->
@@ -256,10 +277,10 @@
                                         <span>Foto da planta</span>
                                         <small>Clique para adicionar</small>
                                     </div>
-                                </div> 
-                                
+                                </div>
+
                                 <input type="file" id="photoInput" class="photo-input" accept="image/*" style="display: none;" name="foto" required>
-                                
+
                                 <div class="photo-actions">
                                     <button type="button" class="camera-photo-btn" onclick="document.getElementById('photoInput').click()">
                                         <i class="fas fa-camera"></i>
@@ -338,47 +359,48 @@
                     </div>
                 </form>
             </div>
-            </div>
+    </div>
 
-            <script>
-                const menuToggle = document.getElementById('menuToggle');
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('sidebarOverlay');
-                const novaPlantaBtn = document.getElementById('nova-planta-btn');
-                const heroCard = document.getElementById('hero-card');
-                const cadCard = document.getElementById('cad-planta');
-                const voltarToHeroBtn = document.getElementById('voltar-home-btn');
-                
-                let showHero = true;
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const novaPlantaBtn = document.getElementById('nova-planta-btn');
+        const heroCard = document.getElementById('hero-card');
+        const cadCard = document.getElementById('cad-planta');
+        const voltarToHeroBtn = document.getElementById('voltar-home-btn');
 
-                function toggleCad() {
-                    if (showHero === true) {
-                        heroCard.classList.add('hidden-card');
-                        cadCard.classList.remove('hidden-card');
-                        showHero = false;
-                    } else {
-                        cadCard.classList.add('hidden-card');
-                        heroCard.classList.remove('hidden-card');
-                        showHero = true;
-                    }
-                }
+        let showHero = true;
 
-                function toggleSidebar() {
-                    sidebar.classList.toggle('active');
-                    overlay.classList.toggle('active');
-                    document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
-                }
+        function toggleCad() {
+            if (showHero === true) {
+                heroCard.classList.add('hidden-card');
+                cadCard.classList.remove('hidden-card');
+                showHero = false;
+            } else {
+                cadCard.classList.add('hidden-card');
+                heroCard.classList.remove('hidden-card');
+                showHero = true;
+            }
+        }
 
-                menuToggle.addEventListener('click', toggleSidebar);
-                overlay.addEventListener('click', toggleSidebar);
-                novaPlantaBtn.addEventListener('click', toggleCad);
-                voltarToHeroBtn.addEventListener('click', toggleCad);
+        function toggleSidebar() {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = sidebar.classList.contains('active') ? 'hidden' : '';
+        }
 
-                document.addEventListener('keydown', function(e) {
-                    if (e.key === 'Escape' && sidebar.classList.contains('active')) {
-                        toggleSidebar();
-                    }
-                });
-            </script>
-    </body>
+        menuToggle.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+        novaPlantaBtn.addEventListener('click', toggleCad);
+        voltarToHeroBtn.addEventListener('click', toggleCad);
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('active')) {
+                toggleSidebar();
+            }
+        });
+    </script>
+</body>
+
 </html>
