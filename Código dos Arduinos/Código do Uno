@@ -1,0 +1,83 @@
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+// -------- LDR (fotoresistor) --------
+const int ldr = A2;
+
+// -------- Sensor de umidade do solo --------
+const int pinoUmidade = A0;
+
+// -------- DS18B20 --------
+const int pinoDados = 2;
+OneWire oneWire(pinoDados);
+DallasTemperature sensores(&oneWire);
+
+// -------- Variáveis de controle --------
+float temperatura = 0;
+int valorLDR = 0;
+int umidade = 0;
+int envio = 0;
+int dump = 0;
+
+// ================= Funções dos sensores =================
+
+int lerLDR() {
+  return analogRead(ldr);
+}
+
+int lerUmidade() {
+  return analogRead(pinoUmidade);
+}
+
+float lerDS18B20() {
+  sensores.requestTemperatures();
+  return sensores.getTempCByIndex(0);
+}
+
+// ================= Envio com handshake =================
+// Envia o valor via Serial e aguarda o caractere de confirmação do ESP8266
+void enviarValor(float valor, char confirmacao, unsigned long timeoutMs) {
+  envio = 0;
+  Serial.println(valor);
+
+  unsigned long inicio = millis();
+  while (envio == 0) {
+    if (Serial.available() > 0) {
+      dump = Serial.read();
+      if (dump == confirmacao) {
+        envio = 1;
+      }
+    }
+    if (millis() - inicio > timeoutMs) {
+      break; // timeout de segurança
+    }
+    delay(50);
+  }
+}
+
+// ================= Setup =================
+
+void setup() {
+  Serial.begin(9600);
+  sensores.begin();
+  pinMode(ldr, INPUT);
+  pinMode(pinoUmidade, INPUT);
+}
+
+// ================= Loop =================
+
+void loop() {
+  // --- LDR ---
+  valorLDR = lerLDR();
+  enviarValor(valorLDR, '1', 2000);
+
+  // --- Umidade do solo ---
+  umidade = lerUmidade();
+  enviarValor(umidade, '2', 2000);
+
+  // --- DS18B20 ---
+  temperatura = lerDS18B20();
+  enviarValor(temperatura, '3', 2000);
+
+  delay(300);
+}
