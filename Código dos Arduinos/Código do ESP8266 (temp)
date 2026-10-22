@@ -3,10 +3,11 @@
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
 
-int loop = 0;
+int looping = 0;
 int umidadeesp = 0;
 int luzesp = 0;
 float temperaturaesp = 0;
+String enviar = "";
 
 const char* ssid     = "EDUARDO HOST";
 const char* password = "redeeduardo";
@@ -24,46 +25,52 @@ String montarJson(float temperatura, float umidade, float luzSolar) {
   return json;
 }
 
+void enviarDados(const String& json) {
+  WiFiClientSecure client;
+  client.setInsecure();
+  client.setTimeout(15000);
+
+  HTTPClient http;
+  http.setTimeout(15000);
+
+  if (!http.begin(client, url)) {
+    Serial.println("FALHA ao iniciar HTTPClient!");
+    return;
+  }
+
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("ngrok-skip-browser-warning", "true");
+
+  int httpCode = http.PUT(json);
+
+  Serial.print("HTTP code: ");
+  Serial.println(httpCode);
+
+  if (httpCode > 0) {
+    Serial.println(http.getString());
+  } else {
+    Serial.print("Erro: ");
+    Serial.println(http.errorToString(httpCode));
+  }
+
+  http.end();
+}
+
 void setup() {
   Serial.begin(9600);
   delay(1000);
 
   WiFi.begin(ssid, password);
-  Serial.print("Conectando ao Wi-Fi");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
   }
-  Serial.println();
-  Serial.print("Wi-Fi conectado. IP: ");
-  Serial.println(WiFi.localIP());
 
-  // ----- Monta o JSON -----
-  StaticJsonDocument<200> doc;
-  doc["temperatura"] = 25.5;
-  doc["umidade"]     = 60.0;
-  doc["luzSolar"]    = 800.0;
-
-  String json;
-  serializeJson(doc, json);
-
-  Serial.println();
-  Serial.println("--- ENVIANDO ---");
-  Serial.println("PUT " + String(url));
-  Serial.println("Dados: " + json);
-
-  // ----- Cliente seguro (ignora certificado) -----
   WiFiClientSecure client;
-  client.setInsecure();      // não valida certificado — ok para teste
+  client.setInsecure(); 
   client.setTimeout(15000);
-
-  // ----- HTTPClient -----
   HTTPClient http;
   http.setTimeout(15000);
-
-  // Inicia a conexão passando o cliente seguro
   if (!http.begin(client, url)) {
-    Serial.println("FALHA ao iniciar HTTPClient!");
     return;
   }
 
@@ -71,40 +78,43 @@ void setup() {
   // Essencial para a versão gratuita do ngrok: pula a página de aviso
   http.addHeader("ngrok-skip-browser-warning", "true");
 
-  Serial.println();
-  Serial.println("Enviando PUT...");
-
   int httpCode = http.PUT(json);
-
-  Serial.println("--- RESPOSTA ---");
-  Serial.print("HTTP code: ");
-  Serial.println(httpCode);
-
-  if (httpCode > 0) {
-    String payload = http.getString();
-    Serial.println("Corpo da resposta:");
-    Serial.println(payload);
-  } else {
-    Serial.print("Erro: ");
-    Serial.println(http.errorToString(httpCode));
-  }
-
   http.end();
-  Serial.println("--- FIM ---");
 }
 
 void loop() {
-  loop = 1;
-  while (loop == 1){
+  if (WiFi.status() != WL_CONNECTED) {
+    WiFi.reconnect();
+    delay(2000);
+    return;
+  }
+
+  looping = 1;
+  while (looping == 1){
     if (Serial.available() > 0) {
-      luz esp = Serial.read()
-      loop = 0;
+      luzesp = Serial.read()
+      looping = 0;
     }
   }
   Serial.println(1);
-
+  looping = 1;
+  while (looping == 1){
+    if (Serial.available() > 0) {
+      umidadeesp = Serial.read()
+      looping = 0;
+    }
+  }
+  Serial.println(2);
+  looping = 1;
+  while (looping == 1){
+    if (Serial.available() > 0) {
+      temperaturaesp = Serial.read()
+      looping = 0;
+    }
+  }
+  Serial.println(3);
   
+  String enviar = montarJson(temperaturaesp, umidadeesp, luzesp);
+  enviarDados(enviar);
 
-
-  
 }
