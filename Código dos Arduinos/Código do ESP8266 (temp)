@@ -94,8 +94,17 @@ void setup() {
 }
 
 void loop() {
-  while ()
-  if (Serial.available() > 0) {
-    Serial.read()
+  loop = 1;
+  while (loop == 1){
+    if (Serial.available() > 0) {
+      luz esp = Serial.read()
+      loop = 0;
+    }
   }
+  Serial.println(1);
+
+  
+
+
+  
 }
