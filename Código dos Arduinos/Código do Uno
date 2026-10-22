@@ -69,15 +69,15 @@ void setup() {
 void loop() {
   // --- LDR ---
   valorLDR = lerLDR();
-  enviarValor(valorLDR, '1', 2000);
+  enviarValor(valorLDR, '49', 2000);
 
   // --- Umidade do solo ---
   umidade = lerUmidade();
-  enviarValor(umidade, '2', 2000);
+  enviarValor(umidade, '50', 2000);
 
   // --- DS18B20 ---
   temperatura = lerDS18B20();
-  enviarValor(temperatura, '3', 2000);
+  enviarValor(temperatura, '51', 2000);
 
   delay(300);
 }
