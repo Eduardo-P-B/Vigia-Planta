@@ -1,0 +1,101 @@
+#include <ESP8266WiFi.h>
+#include <WiFiClientSecure.h>
+#include <ESP8266HTTPClient.h>
+#include <ArduinoJson.h>
+
+int loop = 0;
+int umidadeesp = 0;
+int luzesp = 0;
+float temperaturaesp = 0;
+
+const char* ssid     = "EDUARDO HOST";
+const char* password = "redeeduardo";
+
+const char* url = "https://preteen-driving-echo.ngrok-free.dev/api/dados/6";
+
+String montarJson(float temperatura, float umidade, float luzSolar) {
+  StaticJsonDocument<200> doc;
+  doc["temperatura"] = temperatura;
+  doc["umidade"]     = umidade;
+  doc["luzSolar"]    = luzSolar;
+
+  String json;
+  serializeJson(doc, json);
+  return json;
+}
+
+void setup() {
+  Serial.begin(9600);
+  delay(1000);
+
+  WiFi.begin(ssid, password);
+  Serial.print("Conectando ao Wi-Fi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println();
+  Serial.print("Wi-Fi conectado. IP: ");
+  Serial.println(WiFi.localIP());
+
+  // ----- Monta o JSON -----
+  StaticJsonDocument<200> doc;
+  doc["temperatura"] = 25.5;
+  doc["umidade"]     = 60.0;
+  doc["luzSolar"]    = 800.0;
+
+  String json;
+  serializeJson(doc, json);
+
+  Serial.println();
+  Serial.println("--- ENVIANDO ---");
+  Serial.println("PUT " + String(url));
+  Serial.println("Dados: " + json);
+
+  // ----- Cliente seguro (ignora certificado) -----
+  WiFiClientSecure client;
+  client.setInsecure();      // não valida certificado — ok para teste
+  client.setTimeout(15000);
+
+  // ----- HTTPClient -----
+  HTTPClient http;
+  http.setTimeout(15000);
+
+  // Inicia a conexão passando o cliente seguro
+  if (!http.begin(client, url)) {
+    Serial.println("FALHA ao iniciar HTTPClient!");
+    return;
+  }
+
+  http.addHeader("Content-Type", "application/json");
+  // Essencial para a versão gratuita do ngrok: pula a página de aviso
+  http.addHeader("ngrok-skip-browser-warning", "true");
+
+  Serial.println();
+  Serial.println("Enviando PUT...");
+
+  int httpCode = http.PUT(json);
+
+  Serial.println("--- RESPOSTA ---");
+  Serial.print("HTTP code: ");
+  Serial.println(httpCode);
+
+  if (httpCode > 0) {
+    String payload = http.getString();
+    Serial.println("Corpo da resposta:");
+    Serial.println(payload);
+  } else {
+    Serial.print("Erro: ");
+    Serial.println(http.errorToString(httpCode));
+  }
+
+  http.end();
+  Serial.println("--- FIM ---");
+}
+
+void loop() {
+  while ()
+  if (Serial.available() > 0) {
+    Serial.read()
+  }
+}
