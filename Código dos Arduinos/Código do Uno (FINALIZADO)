@@ -1,11 +1,11 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-// -------- LDR (fotoresistor) --------
-const int ldr = A2;
-
 // -------- Sensor de umidade do solo --------
 const int pinoUmidade = A0;
+
+// -------- LDR (fotoresistor) --------
+const int ldr = A2;
 
 // -------- DS18B20 --------
 const int pinoDados = 2;
@@ -36,7 +36,7 @@ float lerDS18B20() {
 
 // ================= Envio com handshake =================
 // Envia o valor via Serial e aguarda o caractere de confirmação do ESP8266
-void enviarValor(float valor, char confirmacao, unsigned long timeoutMs) {
+void enviarValor(float valor, int confirmacao) {
   envio = 0;
   Serial.println(valor);
 
@@ -47,9 +47,6 @@ void enviarValor(float valor, char confirmacao, unsigned long timeoutMs) {
       if (dump == confirmacao) {
         envio = 1;
       }
-    }
-    if (millis() - inicio > timeoutMs) {
-      break; // timeout de segurança
     }
     delay(50);
   }
@@ -62,22 +59,22 @@ void setup() {
   sensores.begin();
   pinMode(ldr, INPUT);
   pinMode(pinoUmidade, INPUT);
+  delay(5000);
 }
-
 // ================= Loop =================
 
 void loop() {
   // --- LDR ---
   valorLDR = lerLDR();
-  enviarValor(valorLDR, '49', 2000);
+  enviarValor(valorLDR, 49);
 
   // --- Umidade do solo ---
   umidade = lerUmidade();
-  enviarValor(umidade, '50', 2000);
+  enviarValor(umidade, 50);
 
   // --- DS18B20 ---
   temperatura = lerDS18B20();
-  enviarValor(temperatura, '51', 2000);
+  enviarValor(temperatura, 51);
 
-  delay(300);
+  delay(5000);
 }
