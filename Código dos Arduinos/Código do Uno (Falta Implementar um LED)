@@ -18,6 +18,8 @@ int valorLDR = 0;
 int umidade = 0;
 int envio = 0;
 int dump = 0;
+int looping = 1;
+int erro = 0;
 
 // ================= Funções dos sensores =================
 
@@ -36,7 +38,7 @@ float lerDS18B20() {
 
 // ================= Envio com handshake =================
 // Envia o valor via Serial e aguarda o caractere de confirmação do ESP8266
-void enviarValor(float valor, int confirmacao) {
+void enviarValor(float valor, int confirmacao, unsigned long timeoutMs) {
   envio = 0;
   Serial.println(valor);
 
@@ -49,6 +51,11 @@ void enviarValor(float valor, int confirmacao) {
       }
     }
     delay(50);
+    if (millis() - inicio > timeoutMs) {
+       break;
+       erro = 1;
+    }   // <- proteção
+    delay(50);
   }
 }
 
@@ -59,22 +66,32 @@ void setup() {
   sensores.begin();
   pinMode(ldr, INPUT);
   pinMode(pinoUmidade, INPUT);
-  delay(5000);
+  looping = 1;
+  // ascender o led de erro até receber algum input
+  while (looping == 1){
+    if (Serial.available() > 0) {
+      dump = Serial.read();
+      looping = 0;
+    }
+  }
 }
 // ================= Loop =================
 
 void loop() {
+  if(erro = 1){
+    // implementar quando conseguir pegar um led
+  }
   // --- LDR ---
   valorLDR = lerLDR();
-  enviarValor(valorLDR, 49);
+  enviarValor(valorLDR, 49, 30000);
 
   // --- Umidade do solo ---
   umidade = lerUmidade();
-  enviarValor(umidade, 50);
+  enviarValor(umidade, 50, 30000);
 
   // --- DS18B20 ---
   temperatura = lerDS18B20();
-  enviarValor(temperatura, 51);
+  enviarValor(temperatura, 51, 30000);
 
   delay(5000);
 }
