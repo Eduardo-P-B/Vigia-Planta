@@ -21,6 +21,7 @@ int dump = 0;
 int looping = 1;
 int erro = 0;
 
+
 // ================= Funções dos sensores =================
 
 int lerLDR() {
@@ -38,25 +39,38 @@ float lerDS18B20() {
 
 // ================= Envio com handshake =================
 // Envia o valor via Serial e aguarda o caractere de confirmação do ESP8266
-void enviarValor(float valor, int confirmacao, unsigned long timeoutMs) {
+void enviarValor(float valor, int confirmacao, unsigned long timeoutMs, int &erro) {
   envio = 0;
-  Serial.println(valor);
+  if (erro == 49){
 
-  unsigned long inicio = millis();
-  while (envio == 0) {
-    if (Serial.available() > 0) {
-      dump = Serial.read();
-      if (dump == confirmacao) {
-        envio = 1;
-      }
+  } else {
+    Serial.println(valor);
+    unsigned long inicio = millis();
+    while (envio == 0) {
+     if (Serial.available() > 0) {
+        dump = Serial.read();
+       if (dump == confirmacao) {
+         envio = 1;
+       } else {
+         if (dump == 53){
+           digitalWrite(4, HIGH);
+           envio = 1;
+           erro = 49;
+         }
+       }
+     }
+     delay(50);
+     if (millis() - inicio > timeoutMs) {
+        erro = 49;
+        digitalWrite(4, HIGH);
+        break; 
+     }   // <- proteção
+      delay(50);
     }
-    delay(50);
-    if (millis() - inicio > timeoutMs) {
-       break;
-       erro = 1;
-    }   // <- proteção
-    delay(50);
   }
+
+
+
 }
 
 // ================= Setup =================
@@ -66,6 +80,7 @@ void setup() {
   sensores.begin();
   pinMode(ldr, INPUT);
   pinMode(pinoUmidade, INPUT);
+  digitalWrite(3, HIGH);
   looping = 1;
   // ascender o led de erro até receber algum input
   while (looping == 1){
@@ -74,24 +89,29 @@ void setup() {
       looping = 0;
     }
   }
+  digitalWrite(3, LOW);
+  erro = 0;
 }
 // ================= Loop =================
 
 void loop() {
-  if(erro = 1){
-    // implementar quando conseguir pegar um led
+  if(erro == 49){
+    
   }
-  // --- LDR ---
-  valorLDR = lerLDR();
-  enviarValor(valorLDR, 49, 30000);
+  else {
+    // --- LDR ---
+    valorLDR = lerLDR();
+    enviarValor(valorLDR, 49, 30000, erro);
 
-  // --- Umidade do solo ---
-  umidade = lerUmidade();
-  enviarValor(umidade, 50, 30000);
+   // --- Umidade do solo ---
+   umidade = lerUmidade();
+   enviarValor(umidade, 50, 30000, erro);
 
-  // --- DS18B20 ---
-  temperatura = lerDS18B20();
-  enviarValor(temperatura, 51, 30000);
+    // --- DS18B20 ---
+   temperatura = lerDS18B20();
+   enviarValor(temperatura, 51, 30000, erro);
 
-  delay(5000);
+   delay(5000);
+  }
+
 }
