@@ -41,7 +41,7 @@ float lerDS18B20() {
 // Envia o valor via Serial e aguarda o caractere de confirmação do ESP8266
 void enviarValor(float valor, int confirmacao, unsigned long timeoutMs, int &erro) {
   envio = 0;
-  if (erro == 49){
+  if (erro == 1){
 
   } else {
     Serial.println(valor);
@@ -55,7 +55,7 @@ void enviarValor(float valor, int confirmacao, unsigned long timeoutMs, int &err
          if (dump == 53){
            digitalWrite(4, HIGH);
            envio = 1;
-           erro = 49;
+           erro = 1;
          }
        }
      }
@@ -95,7 +95,7 @@ void setup() {
 // ================= Loop =================
 
 void loop() {
-  if(erro == 49){
+  if(erro == 1){
     
   }
   else {
