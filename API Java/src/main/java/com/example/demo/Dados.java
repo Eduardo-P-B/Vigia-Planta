@@ -10,8 +10,8 @@ import jakarta.persistence.Id;
 public class Dados {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Double temperatura;
 
@@ -23,7 +23,11 @@ public class Dados {
     public Dados() {
     }
 
-    public int getId() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
         return id;
     }
 
