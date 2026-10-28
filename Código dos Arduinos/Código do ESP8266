@@ -1,0 +1,138 @@
+// ESP8266 da placa UNO+WiFi: recebe os valores do ATmega328P pela Serial e envia para a API.
+//
+// ATENÇÃO: a Serial é o canal de comunicação com o UNO. NÃO use Serial.print aqui.
+// O UNO lê todo byte que chega: '1', '2' e '3' são confirmações e '5' é sinal de erro.
+
+#include <ESP8266WiFi.h>
+#include <WiFiClientSecure.h>
+#include <ESP8266HTTPClient.h>
+#include <ArduinoJson.h>
+
+const char* ssid     = "EDUARDO HOST";
+const char* password = "redeeduardo";
+
+const char* url = "https://preteen-driving-echo.ngrok-free.dev/api/dados/6";
+
+// ---------------- Protocolo com o UNO ----------------
+const char ACK_LDR      = '1';  // confirma o valor do LDR
+const char ACK_UMIDADE  = '2';  // confirma a umidade do solo
+const char ACK_TEMP     = '3';  // confirma a temperatura
+const char SINAL_ERRO   = '5';  // UNO acende o LED de erro (pino 4) e para
+const char SINAL_PRONTO = 'P';  // qualquer byte libera o setup() do UNO (depois o UNO ignora)
+
+const unsigned long TIMEOUT_SERIAL = 10000;  // o UNO leva ~6 s por ciclo
+const unsigned long TIMEOUT_HTTP   = 8000;   // tem que ser bem menor que os 30 s que o UNO espera
+const int MAX_FALHAS = 5;                    // falhas seguidas na API antes de avisar o UNO (0 = nunca avisa)
+
+int falhas = 0;
+
+// ---------------------------------------------------------
+// Lê uma linha da Serial (até '\n') e converte em float.
+// Retorna false se nada chegar dentro do timeout.
+// ---------------------------------------------------------
+bool lerLinhaSerial(float &valor, unsigned long timeoutMs) {
+  unsigned long inicio = millis();
+  String linha = "";
+
+  while (millis() - inicio < timeoutMs) {
+    while (Serial.available() > 0) {
+      char c = Serial.read();
+      if (c == '\n') {
+        linha.trim();
+        if (linha.length() > 0) {
+          valor = linha.toFloat();
+          return true;
+        }
+      } else if (c != '\r') {
+        linha += c;
+      }
+    }
+    delay(1);  // cede tempo ao sistema; sem isso o watchdog reinicia o ESP
+  }
+  return false;
+}
+
+// ---------------------------------------------------------
+// Recebe um valor do UNO e responde com o caractere de confirmação
+// ---------------------------------------------------------
+bool receberValor(float &valor, char confirmacao) {
+  if (!lerLinhaSerial(valor, TIMEOUT_SERIAL)) return false;
+  Serial.write(confirmacao);
+  return true;
+}
+
+// ---------------------------------------------------------
+// Monta o JSON
+// ---------------------------------------------------------
+String montarJson(float temperatura, float umidade, float luzSolar) {
+  StaticJsonDocument<200> doc;
+  doc["temperatura"] = temperatura;
+  doc["umidade"]     = umidade;
+  doc["luzSolar"]    = luzSolar;
+
+  String json;
+  serializeJson(doc, json);
+  return json;
+}
+
+// ---------------------------------------------------------
+// Envia o JSON via PUT. Retorna true se a API respondeu 2xx.
+// ---------------------------------------------------------
+bool enviarDados(const String& json) {
+  if (WiFi.status() != WL_CONNECTED) return false;
+
+  WiFiClientSecure client;
+  client.setInsecure();
+  client.setCiphersLessSecure();  // sem isso o ngrok derruba o handshake TLS
+  client.setTimeout(TIMEOUT_HTTP);
+
+  HTTPClient http;
+  http.setTimeout(TIMEOUT_HTTP);
+
+  if (!http.begin(client, url)) return false;
+
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("ngrok-skip-browser-warning", "true");
+
+  int httpCode = http.PUT(json);
+  http.end();
+
+  return httpCode >= 200 && httpCode < 300;
+}
+
+// ---------------------------------------------------------
+void setup() {
+  Serial.begin(9600);
+
+  WiFi.mode(WIFI_STA);
+  WiFi.setAutoReconnect(true);
+  WiFi.begin(ssid, password);
+
+  // Espera o Wi-Fi (no máximo 30 s) sem escrever nada na Serial
+  unsigned long inicio = millis();
+  while (WiFi.status() != WL_CONNECTED && millis() - inicio < 30000) {
+    delay(250);
+  }
+
+  while (Serial.available() > 0) Serial.read();  // descarta lixo da inicialização
+  Serial.write(SINAL_PRONTO);                    // libera o setup() do UNO
+}
+
+// ---------------------------------------------------------
+void loop() {
+  float luz, umidade, temperatura;
+
+  // Mesma ordem do UNO: LDR -> umidade -> temperatura
+  if (!receberValor(luz,         ACK_LDR)     ||
+      !receberValor(umidade,     ACK_UMIDADE) ||
+      !receberValor(temperatura, ACK_TEMP)) {
+    Serial.write(SINAL_PRONTO);  // o UNO pode ter reiniciado e estar parado no setup()
+    return;
+  }
+
+  if (enviarDados(montarJson(temperatura, umidade, luz))) {
+    falhas = 0;
+  } else if (MAX_FALHAS > 0 && ++falhas >= MAX_FALHAS) {
+    Serial.write(SINAL_ERRO);    // UNO acende o LED de erro e para (só volta com reset)
+  }
+}
