@@ -1,20 +1,18 @@
 <?php
 
 
+require "dependencias/autenticacao.php"; // Inicia a sessão e verifica se o usuário está autenticado
 require "dependencias/config.php";
-require "dependencias/sessao.php";
+require_once __DIR__ . '/dependencias/imagens.php'; // Conexão com o banco de dados
 
 
-$id = $_SESSION['idUser'];
+$id = $_SESSION['id'];
+$nomeU = $_SESSION['nome'] ?? 'Usuário'; // nome guardado na sessão no login
+$iniciaisUsuario = iniciaisAvatar($nomeU);
 
-$sql = "SELECT nome FROM user WHERE id = :id";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(":id", $id);
-$stmt->execute();
-
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$nomeU = $usuario["nome"];
+// Mensagem temporária exibida no cabeçalho depois da conclusão de um pedido.
+$pedidoConcluido = $_SESSION['pedido_concluido'] ?? null;
+unset($_SESSION['pedido_concluido']);
 
 $sql = "SELECT * FROM planta WHERE userId = :id";
 $stmt = $conn->prepare($sql);
@@ -63,8 +61,9 @@ $temp = count($plantas3);
     <title>Vigia Planta</title>
     <link rel="stylesheet" href="CSS/style-home.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
+    <link rel="stylesheet" href="CSS/fontawesome/all.min.css">
+    <link rel="stylesheet" href="CSS/fontawesome/v4-shims.min.css">
+    <link rel="icon" href="images/sempre/favicon.png" type="image/png">
 </head>
 
 <body>
@@ -73,7 +72,7 @@ $temp = count($plantas3);
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="images/sempre/Favicom.png" height="30px">
+            <img src="images/sempre/favicon.png" height="30px">
             <h3>Vigia Planta</h3>
         </div>
         <nav class="sidebar-nav">
@@ -85,17 +84,9 @@ $temp = count($plantas3);
                 <i class="fas fa-seedling"></i>
                 <span>Minhas Plantas</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-chart-pie"></i>
-                <span>Estatísticas</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fa-regular fa-credit-card"></i>
-                <span>Assinatura</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Calendário</span>
+            <a href="lojinha.php" class="sidebar-link">
+                <i class="fas fa-store"></i>
+                <span>Lojinha</span>
             </a>
         </nav>
         <a href="sair.php" class="btn-delete">SAIR</a>
@@ -103,7 +94,7 @@ $temp = count($plantas3);
 
         <div class="sidebar-footer">
             <div class="user-info-sidebar">
-                <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
+                <span class="avatar-placeholder" role="img" aria-label="Avatar de <?= htmlspecialchars($nomeU, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($iniciaisUsuario, ENT_QUOTES, 'UTF-8') ?></span>
                 <div>
                     <p><?= $nomeU ?></p>
                 </div>
@@ -117,18 +108,24 @@ $temp = count($plantas3);
     <!-- Conteúdo principal -->
     <div class="main-wrapper">
         <header class="top-bar">
-            <button class="menu-toggle" id="menuToggle">
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
                 <i class="fas fa-bars"></i>
             </button>
 
+            <?php if (is_array($pedidoConcluido)): ?>
+                <div class="pedido-confirmacao-cabecalho" role="status" aria-live="polite">
+                    <i class="fas fa-check-circle" aria-hidden="true"></i>
+                    <div>
+                        <strong>Pedido concluído com sucesso!</strong>
+                        <span><?= htmlspecialchars($pedidoConcluido['itens'] ?? '', ENT_QUOTES, 'UTF-8') ?><?php if (!empty($pedidoConcluido['total'])): ?> · Total <?= htmlspecialchars($pedidoConcluido['total'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?></span>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <div class="top-actions">
-                <img src="images/sempre/LogoSemFundo.png" height="60rem">
-                <button class="notifications-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
-                </button>
+                <img src="images/sempre/logo-vigia.png" height="60rem">
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário+S&bold=true&length=2" alt="Perfil">
+                    <span class="avatar-placeholder" role="img" aria-label="Perfil de <?= htmlspecialchars($nomeU, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($iniciaisUsuario, ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
             </div>
         </header>
@@ -200,9 +197,11 @@ $temp = count($plantas3);
 
                         echo "<div class='plant-item'>";
                         echo "<div class='plant-preview'>";
-                        echo "<img src=' " . $linhas['foto'] . " '><br>";
+                        $fotoPlantaUrl = htmlspecialchars(urlFotoPlanta($linhas['foto'] ?? ''), ENT_QUOTES, 'UTF-8');
+                        $nomePlantaHtml = htmlspecialchars((string)($linhas['nome'] ?? 'Planta'), ENT_QUOTES, 'UTF-8');
+                        echo "<img src=\"" . $fotoPlantaUrl . "\" alt=\"Foto de " . $nomePlantaHtml . "\" loading=\"lazy\" onerror=\"this.onerror=null;this.src='images/sempre/planta-placeholder.svg';\"><br>";
                         echo "</div>";
-                        echo "<h4>" . $linhas['nome'] . "</h4>";
+                        echo "<h4>" . $nomePlantaHtml . "</h4>";
                         echo "<p>Nível de Umidade:</p>";
                         echo "<div class='progress-bar'>";
                         echo "<div class='water-progress' style='width: " . $linhas['umidade'] . "%'></div>";

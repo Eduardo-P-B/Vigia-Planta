@@ -1,21 +1,10 @@
 <?php
-
+require "dependencias/autenticacao.php";
 require "dependencias/config.php";
-require "dependencias/sessao.php";
+require_once __DIR__ . '/dependencias/imagens.php';
 
-$id = $_SESSION["idUser"];
-
-/* Buscar usuário */
-$sql = "SELECT nome FROM user WHERE id = :id";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(":id", $id);
-$stmt->execute();
-
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-/* ID da planta */
-$idP = $_GET['idP'] ?? null;
-
+$id = $_SESSION["id"];
+$idP = filter_input(INPUT_GET, 'idP', FILTER_VALIDATE_INT);
 if (!$idP) {
     header("Location: Minhas Plantas.php");
     exit;
@@ -23,97 +12,102 @@ if (!$idP) {
 
 $erro = "";
 $sucesso = "";
-
 $nomeP = "";
 $data = "";
 $local = "";
 $especie = "";
 
-/* Buscar planta */
-$sql = "SELECT * FROM planta 
-        WHERE userId = :id 
-        AND id = :idP";
-
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(":id", $id);
-$stmt->bindParam(":idP", $idP);
+$stmt = $conn->prepare("SELECT * FROM planta WHERE userId = :id AND id = :idP");
+$stmt->bindValue(':id', $id, PDO::PARAM_INT);
+$stmt->bindValue(':idP', $idP, PDO::PARAM_INT);
 $stmt->execute();
-
 $linha = $stmt->fetch(PDO::FETCH_ASSOC);
-
 if (!$linha) {
     header("Location: Minhas Plantas.php");
     exit;
 }
 
+$fotoAtual = $linha['foto'];
 $nomeP = $linha['nome'];
 $data = $linha['dataPlantio'];
 $local = $linha['localizacao'];
 $especie = $linha['especie'];
 
-
-/* Atualização */
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nomeP = trim($_POST['nomeP'] ?? '');
     $data = $_POST['data'] ?? '';
     $local = trim($_POST['local'] ?? '');
     $especie = $_POST['especie'] ?? '';
 
-    /* VALIDAÇÃO */
+    if ($nomeP === '') $erro .= "O nome da planta é obrigatório.<br>";
+    if ($data === '') $erro .= "A data do plantio é obrigatória.<br>";
+    if ($local === '') $erro .= "A localização da planta é obrigatória.<br>";
+    $especiesValidas = ['podocarpo', 'costela de adao', 'croton', 'lirio da paz', 'cacto', 'suculenta', 'rosa'];
+    if (!in_array($especie, $especiesValidas, true)) $erro .= "Selecione uma espécie válida.<br>";
 
-    if (empty($nomeP)) {
-        $erro .= "O nome da planta é obrigatório.<br>";
-    }
-
-    if (empty($data)) {
-        $erro .= "A data do plantio é obrigatória.<br>";
-    }
-
-    if (empty($local)) {
-        $erro .= "O local da planta é obrigatório.<br>";
-    }
-
-    if (empty($especie)) {
-        $erro .= "A espécie da planta é obrigatória.<br>";
-    }
-
-
-    /* PROCESSAMENTO */
-
-    if ($erro == "") {
-
-        $sql = "UPDATE planta 
-                SET nome = :nome,
-                    especie = :especie,
-                    localizacao = :localizacao,
-                    dataPlantio = :dataPlantio
-                WHERE id = :idP
-                AND userId = :userId";
-
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bindParam(":nome", $nomeP);
-        $stmt->bindParam(":especie", $especie);
-        $stmt->bindParam(":localizacao", $local);
-        $stmt->bindParam(":dataPlantio", $data);
-        $stmt->bindParam(":idP", $idP);
-        $stmt->bindParam(":userId", $id);
-
-        if ($stmt->execute()) {
-
-            $sucesso = "Planta atualizada com sucesso!";
-
-            header("Location: Minhas Plantas.php");
-            exit;
-
+    $novaFoto = null;
+    $destinoNovo = null;
+    $upload = isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE;
+    if ($upload) {
+        $tmp = $_FILES['foto']['tmp_name'] ?? '';
+        if ($_FILES['foto']['error'] !== UPLOAD_ERR_OK || !is_uploaded_file($tmp)) {
+            $erro .= "Não foi possível receber a nova foto.<br>";
         } else {
+            $infoImagem = @getimagesize($tmp);
+            $extensoes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+            if ($infoImagem === false || !isset($extensoes[$infoImagem['mime']])) {
+                $erro .= "A foto deve ser uma imagem JPG, PNG, WEBP ou GIF.<br>";
+            }
+        }
+    }
 
-            $erro = "Não foi possível atualizar a planta.";
+    if ($erro === '') {
+        if ($upload) {
+            $pastaImagens = __DIR__ . '/images';
+            if (!is_dir($pastaImagens)) mkdir($pastaImagens, 0755, true);
+            $nomeArquivo = bin2hex(random_bytes(16)) . '.' . $extensoes[$infoImagem['mime']];
+            $destinoNovo = $pastaImagens . '/' . $nomeArquivo;
+            $novaFoto = 'images/' . $nomeArquivo;
+            if (!move_uploaded_file($tmp, $destinoNovo)) {
+                $erro = "Não foi possível salvar a nova foto.";
+            }
+        }
+
+        if ($erro === '') {
+            try {
+                $fotoSalvar = $novaFoto ?? $fotoAtual;
+                $sql = "UPDATE planta SET nome = :nome, especie = :especie,
+                        localizacao = :localizacao, dataPlantio = :dataPlantio,
+                        foto = :foto
+                        WHERE id = :idP AND userId = :id";
+                $stmt = $conn->prepare($sql);
+                $stmt->bindValue(':nome', $nomeP);
+                $stmt->bindValue(':especie', $especie);
+                $stmt->bindValue(':localizacao', $local);
+                $stmt->bindValue(':dataPlantio', $data);
+                $stmt->bindValue(':foto', $fotoSalvar);
+                $stmt->bindValue(':idP', $idP, PDO::PARAM_INT);
+                $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+                $stmt->execute();
+
+                if ($novaFoto !== null && !empty($fotoAtual)) {
+                    $caminhoAntigo = realpath(__DIR__ . '/' . $fotoAtual);
+                    $pastaPermitida = realpath(__DIR__ . '/images');
+                    if ($caminhoAntigo && $pastaPermitida &&
+                        strpos($caminhoAntigo, $pastaPermitida . DIRECTORY_SEPARATOR) === 0 &&
+                        is_file($caminhoAntigo)) {
+                        unlink($caminhoAntigo);
+                    }
+                }
+                header("Location: Minhas Plantas.php");
+                exit;
+            } catch (Throwable $e) {
+                if ($destinoNovo && is_file($destinoNovo)) unlink($destinoNovo);
+                $erro = "Não foi possível atualizar a planta. Tente novamente.";
+            }
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -132,10 +126,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
 
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+          href="CSS/fontawesome/all.min.css">
+    <link rel="stylesheet" href="CSS/fontawesome/v4-shims.min.css">
 
     <link rel="icon"
-          href="images/sempre/Favicom.png"
+          href="images/sempre/favicon.png"
           type="image/png">
 
     <link rel="stylesheet"
@@ -212,8 +207,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Formulário -->
 
             <form id="cadastro-planta-form"
-                  method="POST">
+                  method="POST" enctype="multipart/form-data">
 
+
+                <div class="input-group">
+                    <label class="input-label" for="foto">
+                        <span class="label-icon"><i class="fas fa-image"></i></span>
+                        <span>Foto da planta<small>Selecione uma nova imagem para substituir a atual (opcional)</small></span>
+                    </label>
+                    <div style="margin: 12px 0;">
+                        <img id="fotoPreviewEditar" src="<?= htmlspecialchars(urlFotoPlanta($fotoAtual ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                             alt="Foto atual da planta"
+                             onerror="this.onerror=null;this.src='images/sempre/planta-placeholder.svg';"
+                             style="width: 180px; height: 150px; object-fit: cover; border-radius: 12px; display: block;">
+                    </div>
+                    <input type="file" id="foto" name="foto" class="input-field" accept="image/jpeg,image/png,image/webp,image/gif">
+                </div>
 
                 <div class="form-content">
 
@@ -299,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         Croton
                                     </option>
 
-                                    <option value="lirio"
+                                    <option value="lirio da paz"
                                         <?= $especie == 'lirio' ? 'selected' : '' ?>>
                                         Lírio da Paz
                                     </option>
@@ -441,6 +450,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     </main>
 
+<script>
+const fotoEditar = document.getElementById('foto');
+const previewEditar = document.getElementById('fotoPreviewEditar');
+if (fotoEditar && previewEditar) {
+    fotoEditar.addEventListener('change', function () {
+        const arquivo = this.files && this.files[0];
+        if (!arquivo) return;
+        if (!arquivo.type.startsWith('image/')) {
+            this.value = '';
+            alert('Selecione um arquivo de imagem.');
+            return;
+        }
+        const leitor = new FileReader();
+        leitor.onload = function (evento) {
+            previewEditar.src = evento.target.result;
+            previewEditar.style.display = 'block';
+        };
+        leitor.readAsDataURL(arquivo);
+    });
+}
+</script>
 </body>
 
 </html>

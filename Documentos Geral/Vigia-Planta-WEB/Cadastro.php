@@ -79,8 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Vigia Planta</title>
     <link rel="stylesheet" href="CSS/style-login.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
+    <link rel="stylesheet" href="CSS/fontawesome/all.min.css">
+    <link rel="stylesheet" href="CSS/fontawesome/v4-shims.min.css">
+    <link rel="icon" href="images/sempre/favicon.png" type="image/png">
 </head>
 
 <body>
@@ -88,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="login-card">
             <div class="logo-section">
                 <div class="logo-icon">
-                    <img src="images/sempre/LogoSemFundoBranca.png" width="100">
+                    <img src="images/sempre/logo-vigia-branca.png" width="100">
                 </div>
                 <h1 class="logo-text">Vigia Planta</h1>
                 <p class="tagline">Suas plantas na palma da mão</p>
@@ -154,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
 
             <div class="signup-prompt">
-                <p>Já tem uma conta? <a href="Login.php">Entrar</a></p>
+                <p>Já tem uma conta? <a href="login.php">Entrar</a></p>
             </div>
 
             <div class="plant-decoration">

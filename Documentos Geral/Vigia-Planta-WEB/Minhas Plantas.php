@@ -1,98 +1,87 @@
 <?php
-
+require "dependencias/autenticacao.php";
 require "dependencias/config.php";
-require "dependencias/sessao.php";
+require_once __DIR__ . '/dependencias/imagens.php';
 
-
-$id = $_SESSION["idUser"];
-
-$sql = "SELECT nome FROM user WHERE id = :id";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(":id", $id);
-$stmt->execute();
-
-$usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$nomeU = $usuario["nome"];
+$id = $_SESSION["id"];
+$nomeU = $_SESSION["nome"] ?? 'Usuário';
+$iniciaisUsuario = iniciaisAvatar($nomeU);
 
 $erro = "";
 $sucesso = "";
-
 $nomeP = "";
 $data = "";
 $local = "";
 $especie = "";
-$umidade = 67;
-$luz = 69;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nomeP = trim($_POST['nomeP'] ?? '');
+    $data = $_POST['data'] ?? '';
+    $local = trim($_POST['local'] ?? '');
+    $especie = $_POST['especie'] ?? '';
 
-    $nomeP = trim($_POST['nomeP']);
-    $data = $_POST['data'];
-    $local = trim($_POST['local']);
-    $especie = $_POST['especie'];
+    if ($nomeP === '') $erro .= "O nome da planta é obrigatório.<br>";
+    if ($data === '') $erro .= "A data do plantio é obrigatória.<br>";
+    if ($local === '') $erro .= "A localização da planta é obrigatória.<br>";
 
-    $nomeArquivo = time() . "_" . $_FILES["foto"]["name"];
-    $arquivoTemp = $_FILES["foto"]["tmp_name"];
+    $especiesValidas = ['podocarpo', 'costela de adao', 'croton', 'lirio da paz', 'cacto', 'suculenta', 'rosa'];
+    if (!in_array($especie, $especiesValidas, true)) $erro .= "Selecione uma espécie válida.<br>";
 
-    $foto = "images/" . $nomeArquivo;
+    $foto = null;
+    $arquivoTemp = $_FILES['foto']['tmp_name'] ?? '';
+    $uploadOk = isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK
+        && is_uploaded_file($arquivoTemp);
 
-    move_uploaded_file($arquivoTemp, $foto);
-
-
-
-    // VALIDAÇÃO
-    if (empty($nomeP)) {
-        $erro .= "O nome da planta é obrigatório<br>";
-    }
-    if (empty($data)) {
-        $erro .= "A data do plantio da planta é obrigatória<br>";
-    }
-    if (empty($local)) {
-        $erro .= "O local da planta é obrigatório<br>";
-    }
-    if (empty($especie)) {
-        $erro .= "A especie da planta é obrigatória<br>";
-    }
-    if (empty($foto)) {
-        $erro .= "Uma foto da planta é obrigatória<br>";
+    if (!$uploadOk) {
+        $erro .= "Selecione uma foto válida da planta.<br>";
+    } else {
+        $tipoImagem = @getimagesize($arquivoTemp);
+        $extensoes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+        if ($tipoImagem === false || !isset($extensoes[$tipoImagem['mime']])) {
+            $erro .= "A foto deve ser uma imagem JPG, PNG, WEBP ou GIF.<br>";
+        }
     }
 
-    // PROCESSAMENTO
-    if ($erro == "") {
+    if ($erro === '') {
+        $pastaImagens = __DIR__ . '/images';
+        if (!is_dir($pastaImagens)) {
+            mkdir($pastaImagens, 0755, true);
+        }
+        $extensao = $extensoes[$tipoImagem['mime']];
+        $nomeArquivo = bin2hex(random_bytes(16)) . '.' . $extensao;
+        $destino = $pastaImagens . '/' . $nomeArquivo;
+        $foto = 'images/' . $nomeArquivo;
 
-        $sql = "INSERT INTO planta 
-        (nome, especie, localizacao, dataPlantio, foto, umidade, luz, userId) 
-        VALUES (:nome, :especie, :localizacao, :dataPlantio, :foto, :umidade, :luz, :userId)";
-
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bindParam(":nome", $nomeP);
-        $stmt->bindParam(":especie", $especie);
-        $stmt->bindParam(":localizacao", $local);
-        $stmt->bindParam(":dataPlantio", $data);
-        $stmt->bindParam(":foto", $foto);
-        $stmt->bindParam(":umidade", $umidade);
-        $stmt->bindParam(":luz", $luz);
-        $stmt->bindParam(":userId", $id);
-
-        $stmt->execute();
-
-
-        if ($stmt) {
-            $sucesso = "Usuário cadastrado com sucesso!";
-            //limpar os campos
-            $nomeP = "";
-            $especie = "";
-            $local = "";
-            $data = "";
-            $foto = "";
+        if (!move_uploaded_file($arquivoTemp, $destino)) {
+            $erro = "Não foi possível salvar a foto enviada.";
         } else {
-            $erro = "Erro ao cadastrar usuario";
+            try {
+                $sql = "INSERT INTO planta
+                    (nome, especie, localizacao, dataPlantio, foto, umidade, luz, userId, temp)
+                    VALUES (:nome, :especie, :localizacao, :dataPlantio, :foto, :umidade, :luz, :userId, :temp)";
+                $stmt = $conn->prepare($sql);
+                $umidade = 67;
+                $luz = 69;
+                $stmt->bindValue(':nome', $nomeP);
+                $stmt->bindValue(':especie', $especie);
+                $stmt->bindValue(':localizacao', $local);
+                $stmt->bindValue(':dataPlantio', $data);
+                $stmt->bindValue(':foto', $foto);
+                $stmt->bindValue(':umidade', $umidade);
+                $stmt->bindValue(':luz', $luz);
+                $stmt->bindValue(':userId', $id, PDO::PARAM_INT);
+                // A temperatura inicial padrão é 20 °C até a leitura do sensor.
+                $stmt->bindValue(':temp', 20.0);
+                $stmt->execute();
+                header('Location: Minhas Plantas.php');
+                exit;
+            } catch (Throwable $e) {
+                if (is_file($destino)) unlink($destino);
+                $erro = "Erro ao cadastrar a planta. Verifique os dados e tente novamente.";
+            }
         }
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -104,8 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <title>Vigia Planta</title>
     <link rel="stylesheet" href="CSS/style-home.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="icon" href="images/sempre/Favicom.png" type="image/png">
+    <link rel="stylesheet" href="CSS/fontawesome/all.min.css">
+    <link rel="stylesheet" href="CSS/fontawesome/v4-shims.min.css">
+    <link rel="icon" href="images/sempre/favicon.png" type="image/png">
 </head>
 
 <body>
@@ -114,34 +104,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Sidebar Menu -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="images/sempre/Favicom.png" height="30px">
+            <img src="images/sempre/favicon.png" height="30px">
             <h3>Vigia Planta</h3>
         </div>
         <nav class="sidebar-nav">
-            <a href="Home.php" class="sidebar-link">
+            <a href="home.php" class="sidebar-link">
                 <i class="fas fa-home"></i>
                 <span>Início</span>
             </a>
-            <a href="#" class="sidebar-link active">
+            <a href="Minhas Plantas.php" class="sidebar-link active" aria-current="page">
                 <i class="fas fa-seedling"></i>
                 <span>Minhas Plantas</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-chart-pie"></i>
-                <span>Estatísticas</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fa-regular fa-credit-card"></i>
-                <span>Assinatura</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="fas fa-calendar-alt"></i>
-                <span>Calendário</span>
+            <a href="lojinha.php" class="sidebar-link">
+                <i class="fas fa-store"></i>
+                <span>Lojinha</span>
             </a>
         </nav>
         <div class="sidebar-footer">
             <div class="user-info-sidebar">
-                <img src="https://ui-avatars.com/api/?background=2E7D32&color=fff&name=Usuário+S&bold=true" alt="Avatar">
+                <span class="avatar-placeholder" role="img" aria-label="Avatar de <?= htmlspecialchars($nomeU, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($iniciaisUsuario, ENT_QUOTES, 'UTF-8') ?></span>
                 <div>
                     <p><?= $nomeU ?></p>
                 </div>
@@ -160,13 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </button>
 
             <div class="top-actions">
-                <img src="images/sempre/LogoSemFundo.png" height="60rem">
-                <button class="notifications-btn">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
-                </button>
+                <img src="images/sempre/logo-vigia.png" height="60rem">
                 <div class="user-profile">
-                    <img src="https://ui-avatars.com/api/?background=4CAF50&color=fff&name=Usuário+S&bold=true&length=2" alt="Perfil">
+                    <span class="avatar-placeholder" role="img" aria-label="Perfil de <?= htmlspecialchars($nomeU, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($iniciaisUsuario, ENT_QUOTES, 'UTF-8') ?></span>
                 </div>
             </div>
         </header>
@@ -198,9 +176,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     while ($linha = $stmt->fetch(PDO::FETCH_ASSOC)) {
 
-                        $temp = $linha['temp'];
+                        // A temperatura exibida vem diretamente da coluna temp do banco.
+                        // Se o registro não tiver uma leitura (NULL), não inventamos um valor.
+                        $temp = $linha['temp'] !== null ? (float)$linha['temp'] : null;
 
-                        if ($temp > 30) {
+                        if ($temp === null) {
+                            $comentarioTemp = "Sem leitura registrada";
+                            $classeTemp = "temp-sem-leitura";
+                        } elseif ($temp > 30) {
                             $diferenca = $temp - 30;
                             $comentarioTemp = $diferenca . "°C acima da temperatura ideal";
                             $classeTemp = "temp-quente";
@@ -218,9 +201,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                         echo "<div class='plant-item'>";
                         echo "<div class='plant-preview'>";
-                        echo "<img src=' " . $linha['foto'] . " '><br>";
+                        $fotoPlantaUrl = htmlspecialchars(urlFotoPlanta($linha['foto'] ?? ''), ENT_QUOTES, 'UTF-8');
+                        $nomePlantaHtml = htmlspecialchars((string)($linha['nome'] ?? 'Planta'), ENT_QUOTES, 'UTF-8');
+                        echo "<img src=\"" . $fotoPlantaUrl . "\" alt=\"Foto de " . $nomePlantaHtml . "\" loading=\"lazy\" onerror=\"this.onerror=null;this.src='images/sempre/planta-placeholder.svg';\"><br>";
                         echo "</div>";
-                        echo "<h4>" . $linha['nome'] . "</h4>";
+                        echo "<h4>" . $nomePlantaHtml . "</h4>";
                         echo "<p>Nível de Umidade:</p>";
                         echo "<div class='progress-bar'>";
                         echo "<div class='water-progress' style='width: " . $linha['umidade'] . "%'></div>";
@@ -231,8 +216,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         echo "</div>";
 
                         echo "<div class='temperature-display'>";
-                        echo "<span>" . $temp . "°C</span>";
-                        echo "<small class='$classeTemp'>$comentarioTemp</small>";
+                        echo "<span>" . ($temp === null ? "—" : htmlspecialchars((string)$temp, ENT_QUOTES, 'UTF-8')) . "°C</span>";
+                        echo "<small class='$classeTemp'>" . htmlspecialchars($comentarioTemp, ENT_QUOTES, 'UTF-8') . "</small>";
                         echo "</div>";
 
                         echo "<div class='plant-actions'>";
@@ -313,7 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <option value="podocarpo">Podocarpo</option>
                                             <option value="costela de adao">Costela de Adão</option>
                                             <option value="croton">Croton</option>
-                                            <option value="lirio">Lírio da Paz</option>
+                                            <option value="lirio da paz">Lírio da Paz</option>
                                         </optgroup>
                                         <optgroup label="🌵 Suculentas e Cactos">
                                             <option value="cacto">Cacto</option>
@@ -362,6 +347,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script>
+        const photoInput = document.getElementById('photoInput');
+        const photoPreview = document.getElementById('photoPreview');
+        if (photoInput && photoPreview) {
+            photoInput.addEventListener('change', function () {
+                const arquivo = this.files && this.files[0];
+                if (!arquivo) return;
+                if (!arquivo.type.startsWith('image/')) {
+                    this.value = '';
+                    alert('Selecione um arquivo de imagem.');
+                    return;
+                }
+                const leitor = new FileReader();
+                leitor.onload = function (evento) {
+                    photoPreview.innerHTML = '';
+                    const imagem = document.createElement('img');
+                    imagem.src = evento.target.result;
+                    imagem.alt = 'Pré-visualização da foto da planta';
+                    imagem.style.width = '100%';
+                    imagem.style.height = '100%';
+                    imagem.style.objectFit = 'cover';
+                    photoPreview.appendChild(imagem);
+                };
+                leitor.readAsDataURL(arquivo);
+            });
+        }
+
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebarOverlay');
